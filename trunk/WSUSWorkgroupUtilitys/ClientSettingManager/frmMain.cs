@@ -35,10 +35,27 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             MessageBox.Show(ex.Message, "A problem occurred", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
+
+        private void openMicrosoftKB(string number)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(@"http://support.microsoft.com/kb/" + number);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             this.Text = String.Format("{0} V{1}.{2} Build:{4} Rev:{3}", Application.ProductName, ver.Major, ver.Minor, ver.Revision, ver.Build);
+
+            //TODO: read currentsettings without change reg
+            WSUSSettingManager wsmgr = new WSUSSettingManager();
+            txtWSUSServer.Text = wsmgr.WSUSServer;
         }
 
         private void txtWSUSServer_TextChanged(object sender, EventArgs e)
@@ -81,7 +98,20 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         private void mnuExportToRegFile_Click(object sender, EventArgs e)
         {
-            //TODO: implementieren
+            try
+            {
+                saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
+                if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
+                {
+                    WSUSSettingManager man = new WSUSSettingManager();
+                    man.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                }//end if safefile
+            }//end try
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+
         }
 
         private void cmdRestoreSettings_Click(object sender, EventArgs e)
@@ -91,11 +121,11 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         private void cmdWriteSettings_Click(object sender, EventArgs e)
         {
-            //TODO: implementieren
             if (MessageBox.Show("Are you sure you want to enable the WSUS settings?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
+                    saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
                     if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
                     {
                         WSUSSettingManager man = new WSUSSettingManager();
@@ -112,7 +142,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                         man.AutoInstallMinorUpdates = chkAutoInstallMinor.Checked;
                         man.AllowRebootIfUserLoggedOn = !chkNoRebootWithUser.Checked;
                         man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
-                        
+
                         man.RestartService();
 
                     }//end if safefile
@@ -129,11 +159,44 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         {
             try
             {
-
+                System.Diagnostics.Process.Start("http://wsusworkgroup.codeplex.com/license");
             }
             catch (Exception ex)
             {
                 HandleError(ex);
+            }
+        }
+
+        private void mnuOpenKB328010_Click(object sender, EventArgs e)
+        {
+            openMicrosoftKB("328010");
+        }
+
+        private void openWindowsUpdateSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO: impl
+        }
+
+        private void removeSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO: Are you sure etc.;
+            WSUSSettingManager wsmgr = new WSUSSettingManager(true);
+            bool backupDone = false;
+            saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
+            if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
+            {
+                wsmgr.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                backupDone = true;
+            }
+            if (backupDone == false)
+            {
+                //TODO Text
+                //let the user overwrite the backup - flag
+                backupDone = (MessageBox.Show("no backup\n\nSure delete?", "Remove WSUS-Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes);
+            }
+            if (backupDone)
+            {
+                wsmgr.RemoveWSUS();
             }
         }
 
