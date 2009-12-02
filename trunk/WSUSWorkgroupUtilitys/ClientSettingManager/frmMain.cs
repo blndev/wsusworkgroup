@@ -32,6 +32,30 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             InitializeComponent();
         }
 
+        #region UI Helper
+		
+        private void HandleError(Exception ex)
+        {
+            MessageBox.Show(ex.Message, "A problem occurred", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        private void ShowMessage(string msg)
+        {
+            MessageBox.Show(msg, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+	#endregion 
+
+        #region UI-Handling
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text = String.Format("{0} V{1}.{2} Build:{4} Rev:{3}", Application.ProductName, ver.Major, ver.Minor, ver.Revision, ver.Build);
+
+            ReadSettings(sender, e);
+        }
+
         private void CheckRequiredField(TextBox txt)
         {
             if (string.IsNullOrEmpty(txt.Text))
@@ -45,34 +69,6 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                 errorProviderRed.SetError(txt, "");
                 errorProviderOK.SetError(txt, "OK");
             }
-        }
-
-        private void HandleError(Exception ex)
-        {
-            MessageBox.Show(ex.Message, "A problem occurred", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        }
-
-
-        private void openMicrosoftKB(string number)
-        {
-            try
-            {
-                System.Diagnostics.Process.Start(@"http://support.microsoft.com/kb/" + number);
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-            }
-        }
-
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = String.Format("{0} V{1}.{2} Build:{4} Rev:{3}", Application.ProductName, ver.Major, ver.Minor, ver.Revision, ver.Build);
-
-            //TODO: read currentsettings without change reg
-            WSUSSettingManager wsmgr = new WSUSSettingManager();
-            txtWSUSServer.Text = wsmgr.WSUSServer;
         }
 
         private void txtWSUSServer_TextChanged(object sender, EventArgs e)
@@ -97,23 +93,56 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             CheckRequiredField(txtGroupName);
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmAbout frm = new frmAbout();
-            frm.ShowDialog();
-        }
-
         private void txtWSUSLogServer_TextChanged(object sender, EventArgs e)
         {
             CheckRequiredField(txtWSUSStateServer);
         }
 
-        private void mnuExportToRegFile_Click(object sender, EventArgs e)
+        #endregion
+
+        #region Code-Action
+        private void action_WUServiceStop(object sender, EventArgs e)
+        {
+            try
+            {
+                WSUSSettingManager.ServiceStop();
+                ShowMessage("Service stopped");
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void action_WUServiceStart(object sender, EventArgs e)
+        {
+            try
+            {
+                WSUSSettingManager.ServiceStart();
+                ShowMessage("Service started");
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+
+        private void action_Exit(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void action_ShowAbout(object sender, EventArgs e)
+        {
+            frmAbout frm = new frmAbout();
+            frm.ShowDialog();
+        }
+        #endregion
+
+        #region Main-Action
+
+        private void action_ExportRegToFile(object sender, EventArgs e)
         {
             try
             {
@@ -121,14 +150,39 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                 if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
                 {
                     WSUSSettingManager man = new WSUSSettingManager();
-                    man.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                    WSUSSettingManager.BackupCurrentSettings(saveRegFile_Dialog.FileName);
                 }//end if safefile
             }//end try
             catch (Exception ex)
             {
                 HandleError(ex);
             }
+        }
 
+        private void ReadSettings(object sender, EventArgs e)
+        {
+            //TODO: read currentsettings without change reg
+            WSUSSettingManager wsmgr = new WSUSSettingManager();
+            txtWSUSServer.Text = wsmgr.WSUSServer;
+
+            txtWSUSStateServer.Text = wsmgr.WSUSStateServer;
+            chkEnableGroup.Checked = wsmgr.EnableGroupSettings;
+            txtGroupName.Text = wsmgr.ComputergroupName;
+            chkEnableUpdateInterval.Checked = wsmgr.AutoUpdateDetection;
+
+            int adu = wsmgr.AutoUpdateInterval;
+            if (adu >= numUpdateInterval.Minimum && adu <= numUpdateInterval.Maximum)
+                numUpdateInterval.Value = adu;
+
+            chkEnableRebootDelay.Checked = wsmgr.RebootDelayEnabled;
+
+            int rdl = wsmgr.RebootDelayTime;
+            if(rdl>=numRebootDelayTime.Minimum && rdl<=numRebootDelayTime.Maximum)
+                numRebootDelayTime.Value = rdl;
+
+            chkAutoInstallMinor.Checked = wsmgr.AutoInstallMinorUpdates;
+            chkNoRebootWithUser.Checked = !wsmgr.AllowRebootIfUserLoggedOn;
+            chkNonAdminInstall.Checked = wsmgr.AllowNonAdminInstall;
         }
 
         private void cmdRestoreSettings_Click(object sender, EventArgs e)
@@ -145,8 +199,8 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
                     if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
                     {
-                        WSUSSettingManager man = new WSUSSettingManager();
-                        man.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                        WSUSSettingManager.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                        WSUSSettingManager man = new WSUSSettingManager(true);
 
                         man.WSUSServer = txtWSUSServer.Text;
                         man.WSUSStateServer = txtWSUSStateServer.Text;
@@ -160,7 +214,8 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                         man.AllowRebootIfUserLoggedOn = !chkNoRebootWithUser.Checked;
                         man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
 
-                        man.RestartService();
+                        //chkEnableAutoUpdate.Checked 
+                        WSUSSettingManager.ServiceRestart();
 
                     }//end if safefile
                 }//end try
@@ -172,28 +227,6 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }//end if really?
         }
 
-        private void licenseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                System.Diagnostics.Process.Start("http://wsusworkgroup.codeplex.com/license");
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-            }
-        }
-
-        private void mnuOpenKB328010_Click(object sender, EventArgs e)
-        {
-            openMicrosoftKB("328010");
-        }
-
-        private void openWindowsUpdateSettingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //TODO: impl
-        }
-
         private void removeSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO: Are you sure etc.;
@@ -202,7 +235,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
             if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
             {
-                wsmgr.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                WSUSSettingManager.BackupCurrentSettings(saveRegFile_Dialog.FileName);
                 backupDone = true;
             }
             if (backupDone == false)
@@ -213,10 +246,104 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
             if (backupDone)
             {
-                wsmgr.RemoveWSUS();
+                WSUSSettingManager.RemoveWSUS();
             }
         }
 
+        #endregion
+
+        #region WebCalls
+
+        private void openMicrosoftKB(string number)
+        {
+            string lang = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            openHomepage(String.Format("http://support.microsoft.com/kb/{0}/{1}", number, lang));
+        }
+
+        private void openHomepage(string URL)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(URL);
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        private void action_ShowWSUSHP_01(object sender, EventArgs e)
+        {
+            openHomepage("http://technet.microsoft.com/de-de/library/cc782066(WS.10).aspx");
+        }
+
+        private void action_ShowKB328010(object sender, EventArgs e)
+        {
+            openMicrosoftKB("328010");
+        }
+
+        private void action_ShowHomepage(object sender, EventArgs e)
+        {
+            openHomepage("http://wsusworkgroup.codeplex.com/");
+        }
+
+        private void action_ShowLicense(object sender, EventArgs e)
+        {
+            openHomepage("http://wsusworkgroup.codeplex.com/license");
+        }
+
+        private void action_OpenKBLogfiel(object sender, EventArgs e)
+        {
+            openMicrosoftKB("902093");
+        }
+
+        #endregion
+
+        #region local Tools
+
+        private void action_ShowWindowsUpdateAssistent(object sender, EventArgs e)
+        {
+            WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.ShowSettingsDialog);
+        }
+
+        private void action_ShowWindowsUpdate(object sender, EventArgs e)
+        {
+            WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.ShowWindowsUpdate);
+        }
+
+        private void action_ShowSystrayNotification(object sender, EventArgs e)
+        {
+            WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.DemoUI);
+        }
+
+        private void action_SendReportToWSUS(object sender, EventArgs e)
+        {
+            WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.reportnow);
+        }
+
+        private void action_removeWSUSCoockie(object sender, EventArgs e)
+        {
+            WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.resetauthorization);
+        }
+
+        private void action_ForceDetectUpdates(object sender, EventArgs e)
+        {
+            WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.detectnow);
+        }
+
+        private void action_OpenWindowsUpdateLogfile(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(System.Environment.ExpandEnvironmentVariables("%windir%\\WindowsUpdate.log"));
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+        }
+
+        #endregion
 
     }
 }

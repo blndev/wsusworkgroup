@@ -1,5 +1,2 @@
-- Steuerung / Start + Stop des WSUS - Dienstes (wuactl)
-- Erstellung von .reg oder .cmd - Files für Rollout auf mehrerern Clients
-- Link zu Tools und KB's der Microsoft - Seite
 - ? Reporterstellung zu einem speziellen Client
 - ? Nutzung WSUS API für Programmgesteuertes Updaten

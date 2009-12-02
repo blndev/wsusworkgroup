@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 {
@@ -28,7 +29,42 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
     /// </summary>
     public class WSUSSettingManager
     {
+        #region SubTypes
 
+        /// <summary>
+        /// Commands for the wuauctl util
+        /// </summary>
+        public enum eWUAUCtlCmd
+        {
+            /// <summary>
+            ///  zeigt den Einstellungsdialog "Automatische Updates" an
+            /// </summary>
+            ShowSettingsDialog,
+            /// <summary>
+            /// öffnet die Microsoft Update Webseite bzw. Windows Update in der Systemsteuerung
+            /// </summary>
+            ShowWindowsUpdate,
+            /// <summary>
+            ///  Symbols im Systray
+            /// </summary>
+            DemoUI,
+            /// <summary>
+            /// sendet bericht zu updates an wsus
+            /// </summary>
+            reportnow,
+            /// <summary>
+            /// prüft sofort auf autoupdates
+            /// </summary>
+            detectnow,
+            /// <summary>
+            /// löscht anmeldecookie
+            /// </summary>
+            resetauthorization
+        }
+
+        #endregion
+
+        #region Constructors
         /// <summary>
         /// Create a new Class in ReadOnly - Mode
         /// </summary>
@@ -46,6 +82,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         {
             _AllowWrite = AllowWrite;
         }
+        #endregion
 
         #region RegAccess
         private const string HKLM_WU = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\windows\WindowsUpdate";
@@ -96,7 +133,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     key = HKLM_WUAU; break;
                 default: throw new NotSupportedException();
             }
-            return Microsoft.Win32.Registry.GetValue(key, Name, "");
+            return Microsoft.Win32.Registry.GetValue(key, Name, Default);
         }
 
         /// <summary>
@@ -137,7 +174,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         /// </summary>
         /// <param name="sw">Stream to write in</param>
         /// <param name="reg">Key to get the Values</param>
-        protected static void getAllRegKeyValues(System.IO.StringWriter sw, Microsoft.Win32.RegistryKey reg)
+        protected static void backupAllRegKeyValues(System.IO.StringWriter sw, Microsoft.Win32.RegistryKey reg)
         {
             foreach (string valueName in reg.GetValueNames())
             {
@@ -157,6 +194,10 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         #endregion
 
         #region Props
+        /// <summary>
+        /// Gets or sets the WSUS server and Enables AutoUpdates.
+        /// </summary>
+        /// <value>The WSUS server.</value>
         public string WSUSServer
         {
             get
@@ -165,22 +206,48 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
             set
             {
-                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "WUServer", value);
+                if (_AllowWrite)
+                {
+                    if (String.IsNullOrEmpty(value)) value = "";
+                    if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false)
+                    {
+                        value = string.Format("http://{0}:8530", value);
+                    }
+                    //aktivation AutoUpdates
+                    RegSetValue(eWURegKeys.HKLM_WUAU, "NoAutoUpdate", 0, Microsoft.Win32.RegistryValueKind.DWord);
+                    //set wu Server akttive or inactive
+                    RegSetValue(eWURegKeys.HKLM_WUAU, "UseWUServer", (String.IsNullOrEmpty(value) ? 0 : 1), Microsoft.Win32.RegistryValueKind.DWord);
+                    //now set server
+                    RegSetValue(eWURegKeys.HKLM_WU, "WUServer", value);
+                }
             }
         }
 
+        /// <summary>
+        /// Gets or sets the WSUS state server.
+        /// </summary>
+        /// <value>The WSUS state server.</value>
         public string WSUSStateServer
         {
             get
             {
-                throw new NotImplementedException();
+                return RegGetValue(eWURegKeys.HKLM_WU, "WUStatusServer");
             }
             set
             {
-                throw new NotImplementedException();
+                if (String.IsNullOrEmpty(value)) value = "";
+                if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false)
+                {
+                    value = string.Format("http://{0}:8530", value);
+                } 
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "WUStatusServer", value);
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [enable group settings].
+        /// </summary>
+        /// <value><c>true</c> if [enable group settings]; otherwise, <c>false</c>.</value>
         public bool EnableGroupSettings
         {
             get
@@ -193,145 +260,180 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name of the computergroup.
+        /// </summary>
+        /// <value>The name of the computergroup.</value>
         public string ComputergroupName
         {
             get
             {
-                throw new NotImplementedException();
+                return RegGetValue(eWURegKeys.HKLM_WU, "TargetGroup");
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "TargetGroup", value);
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating that the [auto update detection] interval is enabled or not.
+        /// </summary>
+        /// <remarks>Setting "DetectionFrequencyEnabled" </remarks>
+        /// <value><c>true</c> if [auto update detection]; otherwise, <c>false</c>.</value>
         public bool AutoUpdateDetection
         {
             get
             {
-                throw new NotImplementedException();
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequencyEnabled", 0)) == 1);
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequencyEnabled", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
+        /// <summary>
+        /// Gets or sets the auto update interval.
+        /// </summary>
+        /// <value>The auto update interval.</value>
         public int AutoUpdateInterval
         {
             get
             {
-                throw new NotImplementedException();
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequencyEnabled", 0));
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequencyEnabled", value, Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [reboot delay enabled].
+        /// </summary>
+        /// <value><c>true</c> if [reboot delay enabled]; otherwise, <c>false</c>.</value>
         public bool RebootDelayEnabled
         {
             get
             {
-                throw new NotImplementedException();
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeoutEnabled", 0)) == 1);
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeoutEnabled", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
+        /// <summary>
+        /// Gets or sets the reboot delay time in minutes.
+        /// </summary>
+        /// <value>The reboot delay time.</value>
         public int RebootDelayTime
         {
             get
             {
-                throw new NotImplementedException();
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeout", 0));
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeout", value, Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [auto install minor updates].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [auto install minor updates]; otherwise, <c>false</c>.
+        /// </value>
         public bool AutoInstallMinorUpdates
         {
             get
             {
-                throw new NotImplementedException();
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WUAU, "AutoInstallMinorUpdates", 0)) == 1);
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "AutoInstallMinorUpdates", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [allow reboot if user logged on].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [allow reboot if user logged on]; otherwise, <c>false</c>.
+        /// </value>
         public bool AllowRebootIfUserLoggedOn
         {
             get
             {
-                throw new NotImplementedException();
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WUAU, "NoAutoRebootWithLoggedOnUsers", 0)) == 0);
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "NoAutoRebootWithLoggedOnUsers", (value ? 0 : 1), Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [allow non admin install].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [allow non admin install]; otherwise, <c>false</c>.
+        /// </value>
         public bool AllowNonAdminInstall
         {
             get
             {
-                throw new NotImplementedException();
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WU, "ElevateNonAdmins", 0)) == 1);
             }
             set
             {
-                throw new NotImplementedException();
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "ElevateNonAdmins", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
-        #endregion
 
-        #region Func
         /// <summary>
-        /// Save the current Reg-Settings to a Reg-Export - File
+        /// Gets or sets the scheduled install time.
         /// </summary>
-        /// <param name="filename">Filename to write it</param>
-        /// <exception cref="Exception">any Exception are forwarded</exception>
-        public void BackupCurrentSettings(string filename)
+        /// <value>The scheduled install time.</value>
+        public int ScheduledInstallTime
         {
-            System.IO.StringWriter sw = new System.IO.StringWriter();
-
-            //Write the RegFile Header
-            sw.WriteLine("Windows Registry Editor Version 5.00");
-            sw.WriteLine("");
-
-            string currentKey = getRegKeyName(eWURegKeys.HKLM_WU);
-            Microsoft.Win32.RegistryKey reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(removeHK__FromRegKey(currentKey), true);
-            if (reg == null)
+            get
             {
-                //Write the Delete - Command
-                sw.WriteLine("[-{0}]", currentKey);
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "ScheduledInstallTime", 0));
             }
-            else
+            set
             {
-                sw.WriteLine("[{0}]", currentKey);
-                getAllRegKeyValues(sw, reg);
-                sw.WriteLine();
-
-                currentKey = getRegKeyName(eWURegKeys.HKLM_WUAU);
-                reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(removeHK__FromRegKey(currentKey), true);
-                if (reg == null)
-                {
-                    //Write the Delete - Command
-                    sw.WriteLine("[-{0}]", currentKey);
-                }
-                else
-                {
-                    sw.WriteLine("[{0}]", currentKey);
-                    getAllRegKeyValues(sw, reg);
-                }
+                if (value < 0 || value > 23) throw new ArgumentOutOfRangeException("must be 0 to 23 as hour of day");
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "ScheduledInstallTime", value, Microsoft.Win32.RegistryValueKind.DWord);
             }
-            System.IO.File.WriteAllText(filename, sw.ToString(), System.Text.ASCIIEncoding.Default);
         }
+
+        /// <summary>
+        /// Gets or sets the scheduled install day.
+        /// </summary>
+        /// <remarks> 0|1|2|3|4|5|6|7
+        /// 0 = täglich
+        /// 1-7 = Nummer des Wochentags beginnend bei Sonntag
+        /// </remarks>
+        /// <value>The scheduled install day.</value>
+        public int ScheduledInstallDay
+        {
+            get
+            {
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "ScheduledInstallDay", 0));
+            }
+            set
+            {
+                if (value < 0 || value > 7) throw new ArgumentOutOfRangeException("must be 0 for every day or 1-6 for su, mo, tu, we, th, fr, sa");
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "ScheduledInstallDay", value, Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+        #endregion
 
         #region Helper
 
@@ -340,7 +442,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         /// </summary>
         /// <param name="RegFolder">The reg folder.</param>
         /// <returns>Name as String</returns>
-        private string getRegKeyName(eWURegKeys RegFolder)
+        private static string getRegKeyName(eWURegKeys RegFolder)
         {
             string key = "";
             switch (RegFolder)
@@ -360,7 +462,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>Name without HKLM_</returns>
-        private string removeHK__FromRegKey(string key)
+        private static string removeHKnn_FromRegKey(string key)
         {
             key = key.Replace("HKEY_LOCAL_MACHINE\\", "");
             key = key.Replace("HKEY_CURRENT_USER\\", "");
@@ -370,26 +472,124 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         #endregion
 
+        #region Functions
+
+        #endregion
+
+        #region Static Functions
+
+        /// <summary>
+        /// Save the current Reg-Settings to a Reg-Export - File
+        /// </summary>
+        /// <param name="filename">Filename to write it</param>
+        /// <exception cref="Exception">any Exception are forwarded</exception>
+        public static void BackupCurrentSettings(string filename)
+        {
+            System.IO.StringWriter sw = new System.IO.StringWriter();
+
+            //Write the RegFile Header
+            sw.WriteLine("Windows Registry Editor Version 5.00");
+            sw.WriteLine("");
+
+            string currentKey = getRegKeyName(eWURegKeys.HKLM_WU);
+            Microsoft.Win32.RegistryKey reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(removeHKnn_FromRegKey(currentKey), true);
+            if (reg == null)
+            {
+                //Write the Delete - Command
+                sw.WriteLine("[-{0}]", currentKey);
+            }
+            else
+            {
+                sw.WriteLine("[{0}]", currentKey);
+                backupAllRegKeyValues(sw, reg);
+                sw.WriteLine();
+
+                currentKey = getRegKeyName(eWURegKeys.HKLM_WUAU);
+                reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(removeHKnn_FromRegKey(currentKey), true);
+                if (reg == null)
+                {
+                    //Write the Delete - Command
+                    sw.WriteLine("[-{0}]", currentKey);
+                }
+                else
+                {
+                    sw.WriteLine("[{0}]", currentKey);
+                    backupAllRegKeyValues(sw, reg);
+                }
+            }
+            System.IO.File.WriteAllText(filename, sw.ToString(), System.Text.ASCIIEncoding.Default);
+        }
+
+        private const string WUSERVICENAME = "wuauserv";
         /// <summary>
         /// Restarts the windows update service.
         /// </summary>
-        public void RestartService()
+        public static void ServiceRestart()
         {
-            //TODO impl.
-            throw new Exception("The method or operation is not implemented.");
-            System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController("wuauserv");
+            System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController(WUSERVICENAME);
+            if (sc == null) throw new Exception("service \"" + WUSERVICENAME + "\" not found");
 
+            if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
+                sc.Start();
+            else
+            {
+                sc.Stop();
+                sc.Start();
+            }
         }
 
+        /// <summary>
+        /// start the update services
+        /// </summary>
+        public static void ServiceStart()
+        {
+            System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController(WUSERVICENAME);
+            if (sc == null) throw new Exception("service \"" + WUSERVICENAME + "\" not found");
 
+            if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
+                sc.Start();
+        }
+
+        /// <summary>
+        ///  stop the update services
+        /// </summary>
+        public static void ServiceStop()
+        {
+            System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController(WUSERVICENAME);
+            if (sc == null) throw new Exception("service \"" + WUSERVICENAME + "\" not found");
+
+            if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Stopped)
+                sc.Stop();
+        }
+        
         /// <summary>
         /// Removes the WSUS-Settings.
         /// </summary>
-        public void RemoveWSUS()
+        public static void RemoveWSUS()
         {
-            //TODO impl.
-            throw new Exception("The method or operation is not implemented.");
+            Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WU));
+            System.Diagnostics.EventLog.WriteEntry("WSUSSettingManager", "RemoveWSUS", EventLogEntryType.Information);
         }
+
+        /// <summary>
+        /// Starts the WUAUCTL Util.
+        /// </summary>
+        /// <param name="cmd">The command to execute</param>
+        /// <returns></returns>
+        public static bool StartWUAUCtl(eWUAUCtlCmd cmd)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("wuauclt.exe", "/" + cmd.ToString());
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                return false;
+            }
+            return true;
+        }
+
         #endregion
 
     }
