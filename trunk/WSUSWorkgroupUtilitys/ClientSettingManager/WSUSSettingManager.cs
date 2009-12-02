@@ -23,6 +23,9 @@ using System.Text;
 
 namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 {
+    /// <summary>
+    /// The Manager to Read/Write WSUS Settings on the Client
+    /// </summary>
     public class WSUSSettingManager
     {
 
@@ -48,18 +51,40 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         private const string HKLM_WU = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\windows\WindowsUpdate";
         private const string HKLM_WUAU = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\windows\WindowsUpdate\AU";
 
+        /// <summary>
+        /// Reg Folders for WSUS Settings
+        /// </summary>
         protected enum eWURegKeys
         {
+            /// <summary>
+            /// 
+            /// </summary>
             HKLM_WU,
+            /// <summary>
+            /// 
+            /// </summary>
             HKLM_WUAU
         }
 
 
+        /// <summary>
+        /// get value from reg as string
+        /// </summary>
+        /// <param name="folder">The reg folder</param>
+        /// <param name="Name">value name</param>
+        /// <returns></returns>
         protected string RegGetValue(eWURegKeys folder, string Name)
         {
             return RegGetValue(folder, Name, "").ToString();
         }
 
+        /// <summary>
+        /// get value from reg
+        /// </summary>
+        /// <param name="folder">The reg folder</param>
+        /// <param name="Name">value name</param>
+        /// <param name="Default">default value</param>
+        /// <returns></returns>
         protected object RegGetValue(eWURegKeys folder, string Name, object Default)
         {
             string key = "";
@@ -74,11 +99,24 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             return Microsoft.Win32.Registry.GetValue(key, Name, "");
         }
 
+        /// <summary>
+        /// set the value in reg
+        /// </summary>
+        /// <param name="folder">Reg Folder</param>
+        /// <param name="Name">value name</param>
+        /// <param name="Value">The value</param>
         protected void RegSetValue(eWURegKeys folder, string Name, string Value)
         {
             RegSetValue(folder, Name, Value, Microsoft.Win32.RegistryValueKind.String);
         }
 
+        /// <summary>
+        /// set the value in reg
+        /// </summary>
+        /// <param name="folder">Reg Folder</param>
+        /// <param name="Name">value name</param>
+        /// <param name="Value">The value</param>
+        /// <param name="ValueKind">Kind of the value.</param>
         protected void RegSetValue(eWURegKeys folder, string Name, object Value, Microsoft.Win32.RegistryValueKind ValueKind)
         {
             if (!_AllowWrite) throw new Exception("Write is not allowed in this mode!");
@@ -297,6 +335,11 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         #region Helper
 
+        /// <summary>
+        /// Gets the name of the reg key.
+        /// </summary>
+        /// <param name="RegFolder">The reg folder.</param>
+        /// <returns>Name as String</returns>
         private string getRegKeyName(eWURegKeys RegFolder)
         {
             string key = "";
@@ -311,11 +354,12 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             return key;
         }
 
+
         /// <summary>
-        /// Removes the HKLM an the [] from the KeyName
+        ///  Removes the HKLM an the [] from the KeyName
         /// </summary>
-        /// <param name="RegKey"></param>
-        /// <returns></returns>
+        /// <param name="key">The key.</param>
+        /// <returns>Name without HKLM_</returns>
         private string removeHK__FromRegKey(string key)
         {
             key = key.Replace("HKEY_LOCAL_MACHINE\\", "");
@@ -326,6 +370,9 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         #endregion
 
+        /// <summary>
+        /// Restarts the windows update service.
+        /// </summary>
         public void RestartService()
         {
             //TODO impl.
@@ -335,6 +382,9 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         }
 
 
+        /// <summary>
+        /// Removes the WSUS-Settings.
+        /// </summary>
         public void RemoveWSUS()
         {
             //TODO impl.
