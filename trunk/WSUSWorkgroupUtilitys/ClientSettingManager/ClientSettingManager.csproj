@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager</RootNamespace>
-    <AssemblyName>ClientSettingManager</AssemblyName>
+    <AssemblyName>WSUSClientManager</AssemblyName>
     <ApplicationIcon>App.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>app.pfx</AssemblyOriginatorKeyFile>
@@ -83,10 +83,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Update\UpdateInfo.cs" />
     <Compile Include="WSUSSettingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
+    <Content Include="Update\UpdateInfo.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -33,25 +33,46 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         }
 
         #region UI Helper
-		
+
+        /// <summary>
+        /// Handles errors and show a message to the user
+        /// </summary>
+        /// <param name="ex">The ex.</param>
         private void HandleError(Exception ex)
         {
-            MessageBox.Show(ex.Message, "A problem occurred", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            string msg = getErrorMessages(ex);
+            MessageBox.Show(msg, "A problem occurred", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
+        /// <summary>
+        /// Gets the error messages of exception and all inner exceptions.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        /// <returns>ErrorMessage</returns>
+        private string getErrorMessages(Exception ex)
+        {
+            string retVal = string.Format("{0}\n", ex.Message);
+            if (ex.InnerException != null) retVal += getErrorMessages(ex.InnerException);
+            return retVal;
+        }
+
+        /// <summary>
+        /// Shows a information - message to the user.
+        /// </summary>
+        /// <param name="msg">The MSG.</param>
         private void ShowMessage(string msg)
         {
             MessageBox.Show(msg, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 
-	#endregion 
+        #endregion
 
         #region UI-Handling
         private void frmMain_Load(object sender, EventArgs e)
         {
             System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = String.Format("{0} V{1}.{2} Build:{4} Rev:{3}", Application.ProductName, ver.Major, ver.Minor, ver.Revision, ver.Build);
+            this.Text = String.Format("{0} V{1}.{2} Build: {3}", Application.ProductName, ver.Major, ver.Minor, ver.Revision);
 
             ReadSettings(sender, e);
         }
@@ -161,7 +182,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         private void ReadSettings(object sender, EventArgs e)
         {
-            //TODO: read currentsettings without change reg
+            //read currentsettings without change reg
             WSUSSettingManager wsmgr = new WSUSSettingManager();
             txtWSUSServer.Text = wsmgr.WSUSServer;
 
@@ -177,17 +198,12 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             chkEnableRebootDelay.Checked = wsmgr.RebootDelayEnabled;
 
             int rdl = wsmgr.RebootDelayTime;
-            if(rdl>=numRebootDelayTime.Minimum && rdl<=numRebootDelayTime.Maximum)
+            if (rdl >= numRebootDelayTime.Minimum && rdl <= numRebootDelayTime.Maximum)
                 numRebootDelayTime.Value = rdl;
 
             chkAutoInstallMinor.Checked = wsmgr.AutoInstallMinorUpdates;
             chkNoRebootWithUser.Checked = !wsmgr.AllowRebootIfUserLoggedOn;
             chkNonAdminInstall.Checked = wsmgr.AllowNonAdminInstall;
-        }
-
-        private void cmdRestoreSettings_Click(object sender, EventArgs e)
-        {
-            //TODO: implementieren
         }
 
         private void cmdWriteSettings_Click(object sender, EventArgs e)
@@ -200,53 +216,62 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
                     {
                         WSUSSettingManager.BackupCurrentSettings(saveRegFile_Dialog.FileName);
-                        WSUSSettingManager man = new WSUSSettingManager(true);
-
-                        man.WSUSServer = txtWSUSServer.Text;
-                        man.WSUSStateServer = txtWSUSStateServer.Text;
-                        man.EnableGroupSettings = chkEnableGroup.Checked;
-                        man.ComputergroupName = txtGroupName.Text;
-                        man.AutoUpdateDetection = chkEnableUpdateInterval.Checked;
-                        man.AutoUpdateInterval = (int)numUpdateInterval.Value;
-                        man.RebootDelayEnabled = chkEnableRebootDelay.Checked;
-                        man.RebootDelayTime = (int)numRebootDelayTime.Value;
-                        man.AutoInstallMinorUpdates = chkAutoInstallMinor.Checked;
-                        man.AllowRebootIfUserLoggedOn = !chkNoRebootWithUser.Checked;
-                        man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
-
-                        //chkEnableAutoUpdate.Checked 
-                        WSUSSettingManager.ServiceRestart();
-
                     }//end if safefile
+
+                    WSUSSettingManager man = new WSUSSettingManager(true);
+                    Cursor = Cursors.WaitCursor;
+
+                    man.WSUSServer = txtWSUSServer.Text;
+                    man.WSUSStateServer = txtWSUSStateServer.Text;
+                    man.EnableGroupSettings = chkEnableGroup.Checked;
+                    man.ComputergroupName = txtGroupName.Text;
+                    man.AutoUpdateDetection = chkEnableUpdateInterval.Checked;
+                    man.AutoUpdateInterval = (int)numUpdateInterval.Value;
+                    man.RebootDelayEnabled = chkEnableRebootDelay.Checked;
+                    man.RebootDelayTime = (int)numRebootDelayTime.Value;
+                    man.AutoInstallMinorUpdates = chkAutoInstallMinor.Checked;
+                    man.AllowRebootIfUserLoggedOn = !chkNoRebootWithUser.Checked;
+                    man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
+
+                    //chkEnableAutoUpdate.Checked 
+                    WSUSSettingManager.ServiceRestart();
+                    WSUSSettingManager.StartWUAUCtl(WSUSSettingManager.eWUAUCtlCmd.detectnow);
+                    ShowMessage("WSUS has been successfully configured.");
                 }//end try
                 catch (Exception ex)
                 {
                     HandleError(ex);
                 }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
 
             }//end if really?
         }
 
-        private void removeSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void action_removeWSUSRegKeys(object sender, EventArgs e)
         {
-            //TODO: Are you sure etc.;
-            WSUSSettingManager wsmgr = new WSUSSettingManager(true);
-            bool backupDone = false;
-            saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
-            if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
+            //Are you sure etc.;
+            if (MessageBox.Show("Are you sure you want to remove the WSUS settings?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                WSUSSettingManager.BackupCurrentSettings(saveRegFile_Dialog.FileName);
-                backupDone = true;
-            }
-            if (backupDone == false)
-            {
-                //TODO Text
-                //let the user overwrite the backup - flag
-                backupDone = (MessageBox.Show("no backup\n\nSure delete?", "Remove WSUS-Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes);
-            }
-            if (backupDone)
-            {
-                WSUSSettingManager.RemoveWSUS();
+                WSUSSettingManager wsmgr = new WSUSSettingManager(true);
+                bool backupDone = false;
+                saveRegFile_Dialog.FileName = String.Format("{0}_{1}", System.Environment.MachineName, DateTime.Now.ToString("yyyy-MM-dd_HHmm"));
+                if (saveRegFile_Dialog.ShowDialog() == DialogResult.OK)
+                {
+                    WSUSSettingManager.BackupCurrentSettings(saveRegFile_Dialog.FileName);
+                    backupDone = true;
+                }
+                if (backupDone == false)
+                {
+                    //let the user overwrite the backup - flag
+                    backupDone = (MessageBox.Show("Are you sure you want to remove the WSUS settings without backup?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes);
+                }
+                if (backupDone)
+                {
+                    WSUSSettingManager.RemoveWSUS();
+                }
             }
         }
 

@@ -133,7 +133,10 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     key = HKLM_WUAU; break;
                 default: throw new NotSupportedException();
             }
-            return Microsoft.Win32.Registry.GetValue(key, Name, Default);
+            //if(Microsoft.Win32.Registry.get
+            object retVal = Microsoft.Win32.Registry.GetValue(key, Name, Default);
+            if (retVal == null) retVal = Default;
+            return retVal;
         }
 
         /// <summary>
@@ -211,7 +214,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     if (String.IsNullOrEmpty(value)) value = "";
                     if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false)
                     {
-                        value = string.Format("http://{0}:8530", value);
+                        value = getWSUS_URL(value);
                     }
                     //aktivation AutoUpdates
                     RegSetValue(eWURegKeys.HKLM_WUAU, "NoAutoUpdate", 0, Microsoft.Win32.RegistryValueKind.DWord);
@@ -238,8 +241,8 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                 if (String.IsNullOrEmpty(value)) value = "";
                 if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false)
                 {
-                    value = string.Format("http://{0}:8530", value);
-                } 
+                    value = getWSUS_URL(value);
+                }
                 if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "WUStatusServer", value);
             }
         }
@@ -438,6 +441,16 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         #region Helper
 
         /// <summary>
+        /// Get the default WSUS URL
+        /// </summary>
+        /// <param name="servername">The servername.</param>
+        /// <returns>http://servername:port</returns>
+        private static string getWSUS_URL(string servername)
+        {
+            return string.Format("http://{0}:8530", servername);
+        }
+
+        /// <summary>
         /// Gets the name of the reg key.
         /// </summary>
         /// <param name="RegFolder">The reg folder.</param>
@@ -520,22 +533,18 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             System.IO.File.WriteAllText(filename, sw.ToString(), System.Text.ASCIIEncoding.Default);
         }
 
+        /// <summary>
+        /// name of the windows update service
+        /// </summary>
         private const string WUSERVICENAME = "wuauserv";
+
         /// <summary>
         /// Restarts the windows update service.
         /// </summary>
         public static void ServiceRestart()
         {
-            System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController(WUSERVICENAME);
-            if (sc == null) throw new Exception("service \"" + WUSERVICENAME + "\" not found");
-
-            if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
-                sc.Start();
-            else
-            {
-                sc.Stop();
-                sc.Start();
-            }
+            ServiceStop(true);
+            ServiceStart(true);
         }
 
         /// <summary>
@@ -543,11 +552,27 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         /// </summary>
         public static void ServiceStart()
         {
+            ServiceStart(false);
+        }
+
+        /// <summary>
+        /// Services the start.
+        /// </summary>
+        /// <param name="WaitForStarting">if set to <c>true</c> [wait for starting].</param>
+        public static void ServiceStart(bool WaitForStarting)
+        {
             System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController(WUSERVICENAME);
             if (sc == null) throw new Exception("service \"" + WUSERVICENAME + "\" not found");
 
-            if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
+            if (    
+                sc.Status != System.ServiceProcess.ServiceControllerStatus.Running
+                &&
+                sc.Status != System.ServiceProcess.ServiceControllerStatus.StartPending
+                )
+            {
                 sc.Start();
+            }
+            if(WaitForStarting) sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Running, new TimeSpan(0,0,10));
         }
 
         /// <summary>
@@ -555,13 +580,29 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         /// </summary>
         public static void ServiceStop()
         {
+            ServiceStop(false);
+        }
+
+        /// <summary>
+        /// Services the stop.
+        /// </summary>
+        /// <param name="WaitForStopping">if set to <c>true</c> [wait for stopping].</param>
+        public static void ServiceStop(bool WaitForStopping)
+        {
             System.ServiceProcess.ServiceController sc = new System.ServiceProcess.ServiceController(WUSERVICENAME);
             if (sc == null) throw new Exception("service \"" + WUSERVICENAME + "\" not found");
 
-            if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Stopped)
+            if (
+                sc.Status != System.ServiceProcess.ServiceControllerStatus.Stopped
+                &&
+                sc.Status != System.ServiceProcess.ServiceControllerStatus.StopPending
+                )
+            {
                 sc.Stop();
+            }
+            if(WaitForStopping) sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Stopped, new TimeSpan(0,0,10));
         }
-        
+
         /// <summary>
         /// Removes the WSUS-Settings.
         /// </summary>
