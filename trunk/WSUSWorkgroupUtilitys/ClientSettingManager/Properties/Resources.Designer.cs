@@ -39,7 +39,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Codeplex.DBedarf.WSUS.Workgroup.Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,13 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        internal static System.Drawing.Bitmap WindowsUpdate {
+            get {
+                object obj = ResourceManager.GetObject("WindowsUpdate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

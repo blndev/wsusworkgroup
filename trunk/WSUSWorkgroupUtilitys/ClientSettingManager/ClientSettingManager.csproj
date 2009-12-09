@@ -10,7 +10,7 @@
     <RootNamespace>Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager</RootNamespace>
     <AssemblyName>WSUSClientManager</AssemblyName>
     <ApplicationIcon>App.ico</ApplicationIcon>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>app.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -53,6 +54,9 @@
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
     <Compile Include="License.cs" />
+    <None Include="app.manifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmAbout.resx">
@@ -88,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
+    <None Include="Resources\WindowsUpdate.png" />
     <Content Include="Update\UpdateInfo.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -98,4 +103,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>"%25ProgramFiles%25\Microsoft Visual Studio 8\VC\bin\mt.exe" -manifest "$(TargetDir)app.manifest" -outputresource:"$(TargetDir)$(TargetFileName)";#1</PostBuildEvent>
+  </PropertyGroup>
 </Project>

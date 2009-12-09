@@ -420,7 +420,7 @@
             // cmdOpenSystemUpdate
             // 
             this.cmdOpenSystemUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cmdOpenSystemUpdate.Image = ((System.Drawing.Image)(resources.GetObject("cmdOpenSystemUpdate.Image")));
+            this.cmdOpenSystemUpdate.Image = global::Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Properties.Resources.WindowsUpdate;
             this.cmdOpenSystemUpdate.Location = new System.Drawing.Point(380, 33);
             this.cmdOpenSystemUpdate.Name = "cmdOpenSystemUpdate";
             this.cmdOpenSystemUpdate.Size = new System.Drawing.Size(228, 290);

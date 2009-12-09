@@ -105,8 +105,16 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         private void chkEnableGroup_CheckStateChanged(object sender, EventArgs e)
         {
             txtGroupName.ReadOnly = !chkEnableGroup.Checked;
-            if (txtGroupName.ReadOnly) CheckRequiredField(txtGroupName);
-            else errorProviderRed.SetError(txtGroupName, "");
+            if (!txtGroupName.ReadOnly)
+            {
+                CheckRequiredField(txtGroupName);
+            }
+            else
+            {
+                errorProviderRed.SetError(txtGroupName, "");
+                errorProviderOK.SetError(txtGroupName, "");
+                errorProviderNet.SetError(txtGroupName, "");
+            }
         }
 
         private void txtGroupName_TextChanged(object sender, EventArgs e)
