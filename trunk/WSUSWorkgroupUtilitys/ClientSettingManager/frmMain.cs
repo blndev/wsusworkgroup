@@ -72,7 +72,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         private void frmMain_Load(object sender, EventArgs e)
         {
             System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = String.Format("{0} V{1}.{2} Build: {3}", Application.ProductName, ver.Major, ver.Minor, ver.Revision);
+            this.Text = String.Format("{0} V{1}.{2} Rev: {3}", Application.ProductName, ver.Major, ver.Minor, ver.Build);
 
             ReadSettings(sender, e);
         }
