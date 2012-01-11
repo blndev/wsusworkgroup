@@ -194,6 +194,33 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         }
 
+        /// <summary>
+        /// Deletes a registry key from the registry
+        /// </summary>
+        /// <param name="folder">The folder path in the registry</param>
+        /// <param name="valueName">The name of the value to delete</param>
+        protected void RegDeleteValue(eWURegKeys folder, string valueName)
+        {
+            if (!_AllowWrite) throw new Exception("Write is not allowed in this mode!");
+
+            // If the key exists
+            if (RegGetValue(folder, valueName, null) != null)
+            {
+                switch (folder)
+                {
+                    case eWURegKeys.HKLM_WU:
+                        Microsoft.Win32.Registry.LocalMachine.OpenSubKey(HKLM_WU).DeleteValue(valueName);
+                        break;
+                    case eWURegKeys.HKLM_WUAU:
+                        Microsoft.Win32.Registry.LocalMachine.OpenSubKey(HKLM_WUAU).DeleteValue(valueName);
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+        }
+
+
         #endregion
 
         #region Props
@@ -216,7 +243,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     {
                         value = getWSUS_URL(value);
                     }
-                    //aktivation AutoUpdates
+                    //Activates AutoUpdates
                     RegSetValue(eWURegKeys.HKLM_WUAU, "NoAutoUpdate", 0, Microsoft.Win32.RegistryValueKind.DWord);
                     //set wu Server akttive or inactive
                     RegSetValue(eWURegKeys.HKLM_WUAU, "UseWUServer", (String.IsNullOrEmpty(value) ? 0 : 1), Microsoft.Win32.RegistryValueKind.DWord);
@@ -281,10 +308,11 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         /// <summary>
         /// Gets or sets a value indicating that the [auto update detection] interval is enabled or not.
+        /// Range = 0|1
+        /// 1 = Enable detection frequency.
+        /// 0 = Disable custom detection frequency (use default value of 22 hours).
         /// </summary>
-        /// <remarks>Setting "DetectionFrequencyEnabled" </remarks>
-        /// <value><c>true</c> if [auto update detection]; otherwise, <c>false</c>.</value>
-        public bool AutoUpdateDetection
+        public bool DetectionFrequencyEnabled
         {
             get
             {
@@ -297,26 +325,31 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         }
 
         /// <summary>
-        /// Gets or sets the auto update interval.
+        /// Gets or sets the DetectionFrequency interval.
+        /// Range = n, where n = time in hours (1–22).
+        /// Time between detection cycles.
         /// </summary>
         /// <value>The auto update interval.</value>
-        public int AutoUpdateInterval
+        public int DetectionFrequency
         {
             get
             {
-                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequencyEnabled", 0));
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequency", 0));
             }
             set
             {
-                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequencyEnabled", value, Microsoft.Win32.RegistryValueKind.DWord);
+                if (value < 1 || value > 22) throw new ArgumentOutOfRangeException("must be 1 to 22 as hour of day");
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "DetectionFrequency", value, Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether [reboot delay enabled].
+        /// Range = 0|1
+        /// 1 = Enable RebootRelaunchTimeout.
+        /// 0 = Disable custom RebootRelaunchTimeout(use default value of 10 minutes).
         /// </summary>
-        /// <value><c>true</c> if [reboot delay enabled]; otherwise, <c>false</c>.</value>
-        public bool RebootDelayEnabled
+        public bool RebootRelaunchTimeoutEnabled
         {
             get
             {
@@ -330,9 +363,10 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         /// <summary>
         /// Gets or sets the reboot delay time in minutes.
+        /// Range = n, where n = time in minutes (1–1,440).
+        /// Time between prompts for a scheduled restart.
         /// </summary>
-        /// <value>The reboot delay time.</value>
-        public int RebootDelayTime
+        public int RebootRelaunchTimeout
         {
             get
             {
@@ -340,9 +374,81 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
             set
             {
+                if (value < 1 || value > 1440) throw new ArgumentOutOfRangeException("must be 1 to 1440 as minutes between prompts for a scheduled restart");
                 if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeout", value, Microsoft.Win32.RegistryValueKind.DWord);
             }
         }
+
+        /// <summary>
+        /// Range = 0|1
+        /// 1 = Enable RebootWarningTimeout.
+        /// 0 = Disable custom RebootWarningTimeout (use default value of 5 minutes).
+        /// </summary>
+        public bool RebootWarningTimeoutEnabled
+        {
+            get
+            {
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootWarningTimeoutEnabled", 0)) == 1);
+            }
+            set
+            {
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RebootWarningTimeoutEnabled", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+        /// <summary>
+        /// Range = n, where n = time in minutes (1–30).
+        /// Length, in minutes, of the restart warning countdown after updates have been installed that have a deadline or scheduled updates
+        /// </summary>
+        public int RebootWarningTimeout
+        {
+            get
+            {
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootWarningTimeout", 0));
+            }
+            set
+            {
+                if (value < 1 || value > 30) throw new ArgumentOutOfRangeException("must be 1 to 30 as minutes of the restart warning countdown");
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RebootWarningTimeout", value, Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+        /// <summary>
+        /// Range = n, where n = time in minutes (1–60).
+        /// Time in minutes that Automatic Updates waits at startup before it applies updates from a missed scheduled installation time.
+        /// This policy applies only to scheduled installations, not to deadlines. Updates with deadlines that have expired should always be installed as soon as possible.
+        /// </summary>
+        public bool RescheduleWaitTimeEnabled
+        {
+            get
+            {
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WUAU, "RescheduleWaitTimeEnabled", 0)) == 1);
+            }
+            set
+            {
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RescheduleWaitTimeEnabled", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+
+        /// <summary>
+        /// Range = n, where n = time in minutes (1–60).
+        /// Time in minutes that Automatic Updates waits at startup before it applies updates from a missed scheduled installation time.
+        /// This policy applies only to scheduled installations, not to deadlines. Updates with deadlines that have expired should always be installed as soon as possible.
+        /// </summary>
+        public int RescheduleWaitTime
+        {
+            get
+            {
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RescheduleWaitTime", 0));
+            }
+            set
+            {
+                if (value < 1 || value > 60) throw new ArgumentOutOfRangeException("must be 1 to 60 as time in minutes that Automatic Updates waits at startup before it applies updates from a missed scheduled installation time");
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "RescheduleWaitTime", value, Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+            
 
         /// <summary>
         /// Gets or sets a value indicating whether [auto install minor updates].
@@ -436,6 +542,64 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
         }
 
+        /// <summary>
+        /// Disables or enables access to Windows Update.
+        /// Range = 1|0
+        /// 1 = Disables access to Windows Update.
+        /// 0 = Enables access to Windows Update.
+        /// </summary>
+        public bool DisableWindowsUpdateAccess
+        {
+            get
+            {
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WU, "DisableWindowsUpdateAccess", 0)) == 1);
+            }
+            set
+            {
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "DisableWindowsUpdateAccess", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables WSUS Server to distribute available signed non-Microsoft updates.
+        /// Range = 1|0
+        /// 1 = Enabled. The WSUS server distributes available signed non-Microsoft updates.
+        /// 0 = Disabled. The WSUS server does not distribute available signed non-Microsoft updates.
+        /// </summary>
+        public bool AcceptTrustedPublisherCerts
+        {
+            get
+            {
+                return (Convert.ToInt64(RegGetValue(eWURegKeys.HKLM_WU, "AcceptTrustedPublisherCerts", 0)) == 1);
+            }
+            set
+            {
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WU, "AcceptTrustedPublisherCerts", (value ? 1 : 0), Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+        /// <summary>
+        /// Defines the behavior of Windows Automatic Update
+        /// Range = 2|3|4|5
+        /// 2 = Notify before download.
+        /// 3 = Automatically download and notify of installation.
+        /// 4 = Automatically download and schedule installation. Only valid if values exist for ScheduledInstallDay and ScheduledInstallTime.
+        /// 5 = Automatic Updates is required and users can configure it.
+        /// </summary>
+        public int AUOptions
+        {
+            get
+            {
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "AUOptions", 0));
+            }
+            set
+            {
+                if (value < 2 || value > 5) throw new ArgumentOutOfRangeException("must be in the following range [2-5]");
+                if (_AllowWrite) RegSetValue(eWURegKeys.HKLM_WUAU, "AUOptions", value, Microsoft.Win32.RegistryValueKind.DWord);
+            }
+        }
+
+
         #endregion
 
         #region Helper
@@ -486,6 +650,26 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         #endregion
 
         #region Functions
+
+        /// <summary>
+        /// Resets the SusClientId as described in KB 903262.
+        /// Deletes 4 values in the registry to achieve that and then calls
+        /// wuauclt.exe /resetauthorization /detectnow
+        /// </summary>
+        public void ResetSusClientId()
+        {
+            // We delete 4 values in the registry
+            RegDeleteValue(eWURegKeys.HKLM_WU, "PingID");
+            RegDeleteValue(eWURegKeys.HKLM_WU, "AccountDomainSid");
+            RegDeleteValue(eWURegKeys.HKLM_WU, "SusClientId");
+            RegDeleteValue(eWURegKeys.HKLM_WU, "SusClientIDValidation");
+
+            // We ensure that service wuauserv is started
+            ServiceStart(true);
+
+            // We launch "wuauclt.exe /resetauthorization /detectnow"
+            StartWUAUCtl(eWUAUCtlCmd.resetauthorization, eWUAUCtlCmd.detectnow);
+        }
 
         #endregion
 
@@ -622,6 +806,25 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             try
             {
                 System.Diagnostics.Process.Start("wuauclt.exe", "/" + cmd.ToString());
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.StackTrace);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Starts the WUAUCTL Util with two command
+        /// </summary>
+        /// <param name="cmd">The command to execute</param>
+        /// <returns></returns>
+        public static bool StartWUAUCtl(eWUAUCtlCmd cmd1, eWUAUCtlCmd cmd2)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("wuauclt.exe", "/" + cmd1.ToString() + " /" + cmd2.ToString());
             }
             catch (Exception ex)
             {

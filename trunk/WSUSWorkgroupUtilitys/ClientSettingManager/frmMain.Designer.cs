@@ -61,6 +61,7 @@
             this.mnuOpenKB328010 = new System.Windows.Forms.ToolStripMenuItem();
             this.wSUSRegSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.howToReadWindowsUpdatelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.virtualizationImagingAndCloningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.cmdWriteSettings = new System.Windows.Forms.Button();
@@ -69,7 +70,6 @@
             this.txtGroupName = new System.Windows.Forms.TextBox();
             this.txtWSUSStateServer = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.cmdOpenSystemUpdate = new System.Windows.Forms.Button();
             this.saveRegFile_Dialog = new System.Windows.Forms.SaveFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -89,6 +89,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.errorProviderNet = new System.Windows.Forms.ErrorProvider(this.components);
             this.errorProviderOK = new System.Windows.Forms.ErrorProvider(this.components);
+            this.generateNewClientIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderRed)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -181,7 +182,8 @@
             this.showLogToolStripMenuItem,
             this.openSettingsToolStripMenuItem,
             this.toolStripMenuItem6,
-            this.actionsToolStripMenuItem});
+            this.actionsToolStripMenuItem,
+            this.generateNewClientIDToolStripMenuItem});
             this.windowsUpdateToolStripMenuItem.Name = "windowsUpdateToolStripMenuItem";
             this.windowsUpdateToolStripMenuItem.Size = new System.Drawing.Size(106, 20);
             this.windowsUpdateToolStripMenuItem.Text = "&WindowsUpdate";
@@ -324,7 +326,8 @@
             this.microsoftKBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuOpenKB328010,
             this.wSUSRegSettingsToolStripMenuItem,
-            this.howToReadWindowsUpdatelogToolStripMenuItem});
+            this.howToReadWindowsUpdatelogToolStripMenuItem,
+            this.virtualizationImagingAndCloningToolStripMenuItem});
             this.microsoftKBToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("microsoftKBToolStripMenuItem.Image")));
             this.microsoftKBToolStripMenuItem.Name = "microsoftKBToolStripMenuItem";
             this.microsoftKBToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
@@ -333,23 +336,30 @@
             // mnuOpenKB328010
             // 
             this.mnuOpenKB328010.Name = "mnuOpenKB328010";
-            this.mnuOpenKB328010.Size = new System.Drawing.Size(249, 22);
+            this.mnuOpenKB328010.Size = new System.Drawing.Size(259, 22);
             this.mnuOpenKB328010.Text = "Configure AutomaticUpdates ";
             this.mnuOpenKB328010.Click += new System.EventHandler(this.action_ShowKB328010);
             // 
             // wSUSRegSettingsToolStripMenuItem
             // 
             this.wSUSRegSettingsToolStripMenuItem.Name = "wSUSRegSettingsToolStripMenuItem";
-            this.wSUSRegSettingsToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+            this.wSUSRegSettingsToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.wSUSRegSettingsToolStripMenuItem.Text = "WSUS - RegSettings";
             this.wSUSRegSettingsToolStripMenuItem.Click += new System.EventHandler(this.action_ShowWSUSHP_01);
             // 
             // howToReadWindowsUpdatelogToolStripMenuItem
             // 
             this.howToReadWindowsUpdatelogToolStripMenuItem.Name = "howToReadWindowsUpdatelogToolStripMenuItem";
-            this.howToReadWindowsUpdatelogToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+            this.howToReadWindowsUpdatelogToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
             this.howToReadWindowsUpdatelogToolStripMenuItem.Text = "How to read WindowsUpdate.log";
-            this.howToReadWindowsUpdatelogToolStripMenuItem.Click += new System.EventHandler(this.action_OpenKBLogfiel);
+            this.howToReadWindowsUpdatelogToolStripMenuItem.Click += new System.EventHandler(this.action_OpenKBLogfile);
+            // 
+            // virtualizationImagingAndCloningToolStripMenuItem
+            // 
+            this.virtualizationImagingAndCloningToolStripMenuItem.Name = "virtualizationImagingAndCloningToolStripMenuItem";
+            this.virtualizationImagingAndCloningToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.virtualizationImagingAndCloningToolStripMenuItem.Text = "Virtualization, imaging and cloning";
+            this.virtualizationImagingAndCloningToolStripMenuItem.Click += new System.EventHandler(this.action_OpenKbSusClientId);
             // 
             // statusStrip1
             // 
@@ -417,20 +427,6 @@
             this.label5.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.toolTip1.SetToolTip(this.label5, "Is time in minutes after the user is repeatedly prompted to restart");
             // 
-            // cmdOpenSystemUpdate
-            // 
-            this.cmdOpenSystemUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cmdOpenSystemUpdate.Image = global::Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Properties.Resources.WindowsUpdate;
-            this.cmdOpenSystemUpdate.Location = new System.Drawing.Point(380, 33);
-            this.cmdOpenSystemUpdate.Name = "cmdOpenSystemUpdate";
-            this.cmdOpenSystemUpdate.Size = new System.Drawing.Size(228, 290);
-            this.cmdOpenSystemUpdate.TabIndex = 13;
-            this.cmdOpenSystemUpdate.Text = "configure automatic updates";
-            this.cmdOpenSystemUpdate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.toolTip1.SetToolTip(this.cmdOpenSystemUpdate, "a click opens the windows update configuration");
-            this.cmdOpenSystemUpdate.UseVisualStyleBackColor = true;
-            this.cmdOpenSystemUpdate.Click += new System.EventHandler(this.action_ShowWindowsUpdate);
-            // 
             // saveRegFile_Dialog
             // 
             this.saveRegFile_Dialog.DefaultExt = "reg";
@@ -443,7 +439,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(366, 296);
+            this.tabControl1.Size = new System.Drawing.Size(599, 296);
             this.tabControl1.TabIndex = 12;
             // 
             // tabPage2
@@ -460,7 +456,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(358, 270);
+            this.tabPage2.Size = new System.Drawing.Size(591, 270);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Main";
             // 
@@ -504,7 +500,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(358, 270);
+            this.tabPage1.Size = new System.Drawing.Size(591, 270);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Details";
             // 
@@ -641,12 +637,19 @@
             this.errorProviderOK.ContainerControl = this;
             this.errorProviderOK.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderOK.Icon")));
             // 
+            // generateNewClientIDToolStripMenuItem
+            // 
+            this.generateNewClientIDToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("generateNewClientIDToolStripMenuItem.Image")));
+            this.generateNewClientIDToolStripMenuItem.Name = "generateNewClientIDToolStripMenuItem";
+            this.generateNewClientIDToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.generateNewClientIDToolStripMenuItem.Text = "Reset SusClientID";
+            this.generateNewClientIDToolStripMenuItem.Click += new System.EventHandler(this.action_ResetSusClientId);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(623, 348);
-            this.Controls.Add(this.cmdOpenSystemUpdate);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -736,7 +739,8 @@
         private System.Windows.Forms.ToolStripMenuItem licenseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem howToReadWindowsUpdatelogToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
-        private System.Windows.Forms.Button cmdOpenSystemUpdate;
+        private System.Windows.Forms.ToolStripMenuItem virtualizationImagingAndCloningToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateNewClientIDToolStripMenuItem;
     }
 }
 

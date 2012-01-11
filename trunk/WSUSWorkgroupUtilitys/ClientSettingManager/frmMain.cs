@@ -197,15 +197,15 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             txtWSUSStateServer.Text = wsmgr.WSUSStateServer;
             chkEnableGroup.Checked = wsmgr.EnableGroupSettings;
             txtGroupName.Text = wsmgr.ComputergroupName;
-            chkEnableUpdateInterval.Checked = wsmgr.AutoUpdateDetection;
+            chkEnableUpdateInterval.Checked = wsmgr.DetectionFrequencyEnabled;
 
-            int adu = wsmgr.AutoUpdateInterval;
+            int adu = wsmgr.DetectionFrequency;
             if (adu >= numUpdateInterval.Minimum && adu <= numUpdateInterval.Maximum)
                 numUpdateInterval.Value = adu;
 
-            chkEnableRebootDelay.Checked = wsmgr.RebootDelayEnabled;
+            chkEnableRebootDelay.Checked = wsmgr.RebootRelaunchTimeoutEnabled;
 
-            int rdl = wsmgr.RebootDelayTime;
+            int rdl = wsmgr.RebootRelaunchTimeout;
             if (rdl >= numRebootDelayTime.Minimum && rdl <= numRebootDelayTime.Maximum)
                 numRebootDelayTime.Value = rdl;
 
@@ -233,10 +233,10 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     man.WSUSStateServer = txtWSUSStateServer.Text;
                     man.EnableGroupSettings = chkEnableGroup.Checked;
                     man.ComputergroupName = txtGroupName.Text;
-                    man.AutoUpdateDetection = chkEnableUpdateInterval.Checked;
-                    man.AutoUpdateInterval = (int)numUpdateInterval.Value;
-                    man.RebootDelayEnabled = chkEnableRebootDelay.Checked;
-                    man.RebootDelayTime = (int)numRebootDelayTime.Value;
+                    man.DetectionFrequencyEnabled = chkEnableUpdateInterval.Checked;
+                    man.DetectionFrequency = (int)numUpdateInterval.Value;
+                    man.RebootRelaunchTimeoutEnabled = chkEnableRebootDelay.Checked;
+                    man.RebootRelaunchTimeout = (int)numRebootDelayTime.Value;
                     man.AutoInstallMinorUpdates = chkAutoInstallMinor.Checked;
                     man.AllowRebootIfUserLoggedOn = !chkNoRebootWithUser.Checked;
                     man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
@@ -325,9 +325,14 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             openHomepage("http://wsusworkgroup.codeplex.com/license");
         }
 
-        private void action_OpenKBLogfiel(object sender, EventArgs e)
+        private void action_OpenKBLogfile(object sender, EventArgs e)
         {
             openMicrosoftKB("902093");
+        }
+
+        private void action_OpenKbSusClientId(object sender, EventArgs e)
+        {
+            openMicrosoftKB("903262");
         }
 
         #endregion
@@ -376,7 +381,13 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
         }
 
-        #endregion
+        private void action_ResetSusClientId(object sender, EventArgs e)
+        {
+            WSUSSettingManager wsmgr = new WSUSSettingManager(true);
+            wsmgr.ResetSusClientId();
+            MessageBox.Show("SusClientID regenerated.");
+        }
 
+        #endregion
     }
 }
