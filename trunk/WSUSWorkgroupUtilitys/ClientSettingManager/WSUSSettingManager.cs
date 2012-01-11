@@ -794,6 +794,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         public static void RemoveWSUS()
         {
             Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WU));
+            Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WUAU));
             System.Diagnostics.EventLog.WriteEntry("WSUSSettingManager", "RemoveWSUS", EventLogEntryType.Information);
         }
 
