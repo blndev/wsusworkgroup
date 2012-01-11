@@ -266,7 +266,8 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             set
             {
                 if (String.IsNullOrEmpty(value)) value = "";
-                if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false)
+                if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false &&
+                    value.StartsWith("https://", StringComparison.CurrentCultureIgnoreCase) == false)
                 {
                     value = getWSUS_URL(value);
                 }

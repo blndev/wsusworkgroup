@@ -51,6 +51,7 @@
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.stopServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startServiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateNewClientIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +90,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.errorProviderNet = new System.Windows.Forms.ErrorProvider(this.components);
             this.errorProviderOK = new System.Windows.Forms.ErrorProvider(this.components);
-            this.generateNewClientIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderRed)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -270,6 +270,14 @@
             this.startServiceToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.startServiceToolStripMenuItem.Text = "st&art service";
             this.startServiceToolStripMenuItem.Click += new System.EventHandler(this.action_WUServiceStart);
+            // 
+            // generateNewClientIDToolStripMenuItem
+            // 
+            this.generateNewClientIDToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("generateNewClientIDToolStripMenuItem.Image")));
+            this.generateNewClientIDToolStripMenuItem.Name = "generateNewClientIDToolStripMenuItem";
+            this.generateNewClientIDToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.generateNewClientIDToolStripMenuItem.Text = "Reset SusClientID";
+            this.generateNewClientIDToolStripMenuItem.Click += new System.EventHandler(this.action_ResetSusClientId);
             // 
             // toolStripMenuItem1
             // 
@@ -502,7 +510,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(591, 270);
             this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Details";
+            this.tabPage1.Text = "Advanced";
             // 
             // chkNonAdminInstall
             // 
@@ -636,14 +644,6 @@
             this.errorProviderOK.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProviderOK.ContainerControl = this;
             this.errorProviderOK.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderOK.Icon")));
-            // 
-            // generateNewClientIDToolStripMenuItem
-            // 
-            this.generateNewClientIDToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("generateNewClientIDToolStripMenuItem.Image")));
-            this.generateNewClientIDToolStripMenuItem.Name = "generateNewClientIDToolStripMenuItem";
-            this.generateNewClientIDToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
-            this.generateNewClientIDToolStripMenuItem.Text = "Reset SusClientID";
-            this.generateNewClientIDToolStripMenuItem.Click += new System.EventHandler(this.action_ResetSusClientId);
             // 
             // frmMain
             // 
