@@ -90,6 +90,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.errorProviderNet = new System.Windows.Forms.ErrorProvider(this.components);
             this.errorProviderOK = new System.Windows.Forms.ErrorProvider(this.components);
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.comboBoxAUOptions = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderRed)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -100,6 +103,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateInterval)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderNet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderOK)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // errorProviderRed
@@ -111,9 +117,9 @@
             // txtWSUSServer
             // 
             this.errorProviderRed.SetError(this.txtWSUSServer, "Required");
-            this.txtWSUSServer.Location = new System.Drawing.Point(7, 31);
+            this.txtWSUSServer.Location = new System.Drawing.Point(11, 33);
             this.txtWSUSServer.Name = "txtWSUSServer";
-            this.txtWSUSServer.Size = new System.Drawing.Size(325, 20);
+            this.txtWSUSServer.Size = new System.Drawing.Size(211, 20);
             this.txtWSUSServer.TabIndex = 17;
             this.toolTip1.SetToolTip(this.txtWSUSServer, "Enter a server name, or a full URL (http://server:port)");
             this.txtWSUSServer.TextChanged += new System.EventHandler(this.txtWSUSServer_TextChanged);
@@ -386,7 +392,7 @@
             // 
             // cmdWriteSettings
             // 
-            this.cmdWriteSettings.Location = new System.Drawing.Point(7, 223);
+            this.cmdWriteSettings.Location = new System.Drawing.Point(149, 282);
             this.cmdWriteSettings.Name = "cmdWriteSettings";
             this.cmdWriteSettings.Size = new System.Drawing.Size(325, 41);
             this.cmdWriteSettings.TabIndex = 7;
@@ -397,30 +403,30 @@
             // chkEnableGroup
             // 
             this.chkEnableGroup.AutoSize = true;
-            this.chkEnableGroup.Location = new System.Drawing.Point(7, 131);
+            this.chkEnableGroup.Location = new System.Drawing.Point(11, 120);
             this.chkEnableGroup.Name = "chkEnableGroup";
-            this.chkEnableGroup.Size = new System.Drawing.Size(210, 17);
+            this.chkEnableGroup.Size = new System.Drawing.Size(211, 17);
             this.chkEnableGroup.TabIndex = 12;
-            this.chkEnableGroup.Text = "put this client to special WSUS - Group";
+            this.chkEnableGroup.Text = "Put this client to special WSUS - Group";
             this.toolTip1.SetToolTip(this.chkEnableGroup, "If this option is enabled, this computer will use the wsus-groups to get updates");
             this.chkEnableGroup.UseVisualStyleBackColor = true;
             this.chkEnableGroup.CheckStateChanged += new System.EventHandler(this.chkEnableGroup_CheckStateChanged);
             // 
             // txtGroupName
             // 
-            this.txtGroupName.Location = new System.Drawing.Point(6, 169);
+            this.txtGroupName.Location = new System.Drawing.Point(11, 158);
             this.txtGroupName.Name = "txtGroupName";
             this.txtGroupName.ReadOnly = true;
-            this.txtGroupName.Size = new System.Drawing.Size(326, 20);
+            this.txtGroupName.Size = new System.Drawing.Size(212, 20);
             this.txtGroupName.TabIndex = 19;
             this.toolTip1.SetToolTip(this.txtGroupName, "Enter a WSUS-Groupname");
             this.txtGroupName.TextChanged += new System.EventHandler(this.txtGroupName_TextChanged);
             // 
             // txtWSUSStateServer
             // 
-            this.txtWSUSStateServer.Location = new System.Drawing.Point(7, 79);
+            this.txtWSUSStateServer.Location = new System.Drawing.Point(11, 81);
             this.txtWSUSStateServer.Name = "txtWSUSStateServer";
-            this.txtWSUSStateServer.Size = new System.Drawing.Size(325, 20);
+            this.txtWSUSStateServer.Size = new System.Drawing.Size(211, 20);
             this.txtWSUSStateServer.TabIndex = 18;
             this.toolTip1.SetToolTip(this.txtWSUSStateServer, "Enter a server name, or a full URL (http://server:port)");
             this.txtWSUSStateServer.TextChanged += new System.EventHandler(this.txtWSUSLogServer_TextChanged);
@@ -447,30 +453,23 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(599, 296);
+            this.tabControl1.Size = new System.Drawing.Size(599, 253);
             this.tabControl1.TabIndex = 12;
             // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.cmdWriteSettings);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.chkEnableGroup);
-            this.tabPage2.Controls.Add(this.txtGroupName);
-            this.tabPage2.Controls.Add(this.txtWSUSStateServer);
-            this.tabPage2.Controls.Add(this.txtWSUSServer);
+            this.tabPage2.Controls.Add(this.splitContainer1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(591, 270);
+            this.tabPage2.Size = new System.Drawing.Size(591, 227);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Main";
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(6, 151);
+            this.label3.Location = new System.Drawing.Point(11, 140);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 17);
             this.label3.TabIndex = 16;
@@ -478,15 +477,16 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(4, 59);
+            this.label2.Location = new System.Drawing.Point(11, 61);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(103, 17);
+            this.label2.Size = new System.Drawing.Size(132, 17);
             this.label2.TabIndex = 13;
-            this.label2.Text = "Status - Server:";
+            this.label2.Text = "WSUS Status Server:";
+            this.toolTip1.SetToolTip(this.label2, "Usually same as WSUS - Server");
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(4, 11);
+            this.label1.Location = new System.Drawing.Point(11, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 17);
             this.label1.TabIndex = 15;
@@ -645,12 +645,58 @@
             this.errorProviderOK.ContainerControl = this;
             this.errorProviderOK.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderOK.Icon")));
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.txtWSUSStateServer);
+            this.splitContainer1.Panel1.Controls.Add(this.label3);
+            this.splitContainer1.Panel1.Controls.Add(this.txtWSUSServer);
+            this.splitContainer1.Panel1.Controls.Add(this.chkEnableGroup);
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
+            this.splitContainer1.Panel1.Controls.Add(this.txtGroupName);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.label6);
+            this.splitContainer1.Panel2.Controls.Add(this.comboBoxAUOptions);
+            this.splitContainer1.Size = new System.Drawing.Size(585, 221);
+            this.splitContainer1.SplitterDistance = 262;
+            this.splitContainer1.TabIndex = 20;
+            // 
+            // comboBoxAUOptions
+            // 
+            this.comboBoxAUOptions.FormattingEnabled = true;
+            this.comboBoxAUOptions.Items.AddRange(new object[] {
+            "Notify before download",
+            "Automatically download and notify of installation",
+            "Automatically download and schedule installation",
+            "Automatic Updates is required and users can configure it"});
+            this.comboBoxAUOptions.Location = new System.Drawing.Point(6, 33);
+            this.comboBoxAUOptions.Name = "comboBoxAUOptions";
+            this.comboBoxAUOptions.Size = new System.Drawing.Size(298, 21);
+            this.comboBoxAUOptions.TabIndex = 0;
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(3, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 17);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "Auto update mode";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(623, 348);
             this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.cmdWriteSettings);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -667,13 +713,16 @@
             this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numRebootDelayTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpdateInterval)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderNet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderOK)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -741,6 +790,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem virtualizationImagingAndCloningToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateNewClientIDToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBoxAUOptions;
     }
 }
 

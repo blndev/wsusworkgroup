@@ -69,6 +69,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         #endregion
 
         #region UI-Handling
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -212,6 +213,16 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             chkAutoInstallMinor.Checked = wsmgr.AutoInstallMinorUpdates;
             chkNoRebootWithUser.Checked = !wsmgr.AllowRebootIfUserLoggedOn;
             chkNonAdminInstall.Checked = wsmgr.AllowNonAdminInstall;
+
+            int? auOptions = wsmgr.AUOptions;
+            if (auOptions != null && auOptions >= 2 && auOptions <= 5)
+            {
+                comboBoxAUOptions.SelectedIndex = wsmgr.AUOptions - 2; // -2 because range is from 2 to 5 in registry
+            }
+            else
+            {
+                comboBoxAUOptions.SelectedIndex = -1; // If no reg settings, we don't select any index by default
+            }
         }
 
         private void cmdWriteSettings_Click(object sender, EventArgs e)
@@ -240,6 +251,10 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     man.AutoInstallMinorUpdates = chkAutoInstallMinor.Checked;
                     man.AllowRebootIfUserLoggedOn = !chkNoRebootWithUser.Checked;
                     man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
+                    if (comboBoxAUOptions.SelectedIndex != -1) // Only if a value is selected
+                    {
+                        man.AUOptions = comboBoxAUOptions.SelectedIndex + 2; // +2 because AUOptions range = 2|3|4|5
+                    }
 
                     //chkEnableAutoUpdate.Checked 
                     WSUSSettingManager.ServiceRestart();
@@ -280,6 +295,10 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                 {
                     WSUSSettingManager.RemoveWSUS();
                 }
+
+                // We then refresh the GUI from settings in the registry. The GUI will appear empty since
+                // settings have been deleted
+                ReadSettings(sender, e);
             }
         }
 
@@ -385,7 +404,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         {
             WSUSSettingManager wsmgr = new WSUSSettingManager(true);
             wsmgr.ResetSusClientId();
-            MessageBox.Show("SusClientID regenerated.");
+            ShowMessage("SusClientID regenerated.");
         }
 
         #endregion
