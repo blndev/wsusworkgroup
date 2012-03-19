@@ -239,7 +239,8 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                 if (_AllowWrite)
                 {
                     if (String.IsNullOrEmpty(value)) value = "";
-                    if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false)
+                    if (value.StartsWith("http://", StringComparison.CurrentCultureIgnoreCase) == false &&
+                        value.StartsWith("https://", StringComparison.CurrentCultureIgnoreCase) == false)
                     {
                         value = getWSUS_URL(value);
                     }
@@ -371,7 +372,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         {
             get
             {
-                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeout", 0));
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootRelaunchTimeout", 1));
             }
             set
             {
@@ -405,7 +406,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         {
             get
             {
-                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootWarningTimeout", 0));
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RebootWarningTimeout", 1));
             }
             set
             {
@@ -441,7 +442,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         {
             get
             {
-                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RescheduleWaitTime", 0));
+                return Convert.ToInt32(RegGetValue(eWURegKeys.HKLM_WUAU, "RescheduleWaitTime", 1));
             }
             set
             {
@@ -793,8 +794,15 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         /// </summary>
         public static void RemoveWSUS()
         {
-            Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WU));
-            Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WUAU));
+            if (Microsoft.Win32.Registry.LocalMachine.OpenSubKey(removeHKnn_FromRegKey(HKLM_WUAU)) != null)
+            {
+                Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WUAU));
+            }
+            if (Microsoft.Win32.Registry.LocalMachine.OpenSubKey(removeHKnn_FromRegKey(HKLM_WU)) != null)
+            {
+                Microsoft.Win32.Registry.LocalMachine.DeleteSubKeyTree(removeHKnn_FromRegKey(HKLM_WU));
+            }
+  
             System.Diagnostics.EventLog.WriteEntry("WSUSSettingManager", "RemoveWSUS", EventLogEntryType.Information);
         }
 

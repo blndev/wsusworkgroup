@@ -223,6 +223,20 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             {
                 comboBoxAUOptions.SelectedIndex = -1; // If no reg settings, we don't select any index by default
             }
+            comboBoxAUOptions_SelectedIndexChanged(sender, e); // We check what is selected in the combo box.
+
+            comboBoxScheduledInstallDay.SelectedIndex = wsmgr.ScheduledInstallDay;
+            numScheduledInstallTime.Value = wsmgr.ScheduledInstallTime;
+
+            chkDisableWindowsUpdateAccess.Checked = wsmgr.DisableWindowsUpdateAccess;
+            chkAcceptTrustedPublisherCerts.Checked = wsmgr.AcceptTrustedPublisherCerts;
+
+            chkRebootWarningTimeout.Checked = wsmgr.RebootWarningTimeoutEnabled;
+            numRebootWarningTimeout.Value = wsmgr.RebootWarningTimeout;
+
+            chkRescheduleWaitTime.Checked = wsmgr.RescheduleWaitTimeEnabled;
+            numRescheduleWaitTime.Value = wsmgr.RescheduleWaitTime;
+
         }
 
         private void cmdWriteSettings_Click(object sender, EventArgs e)
@@ -255,6 +269,15 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     {
                         man.AUOptions = comboBoxAUOptions.SelectedIndex + 2; // +2 because AUOptions range = 2|3|4|5
                     }
+                    man.ScheduledInstallDay = comboBoxScheduledInstallDay.SelectedIndex;
+                    man.ScheduledInstallTime = (int)numScheduledInstallTime.Value;
+                    man.DisableWindowsUpdateAccess = chkDisableWindowsUpdateAccess.Checked;
+                    man.AcceptTrustedPublisherCerts = chkAcceptTrustedPublisherCerts.Checked;
+                    man.RebootWarningTimeoutEnabled = chkRebootWarningTimeout.Checked;
+                    man.RebootWarningTimeout = (int)numRebootWarningTimeout.Value;
+                    man.RescheduleWaitTimeEnabled = chkRescheduleWaitTime.Checked;
+                    man.RescheduleWaitTime = (int)numRescheduleWaitTime.Value;
+
 
                     //chkEnableAutoUpdate.Checked 
                     WSUSSettingManager.ServiceRestart();
@@ -302,6 +325,15 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             }
         }
 
+        private void comboBoxAUOptions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // We only activate fields when AUOptions = 4 (aka 2 in the list)
+            // 4 = Automatically download and schedule installation. (Only valid if values exist for ScheduledInstallDay and ScheduledInstallTime.)
+            bool activeFields = (comboBoxAUOptions.SelectedIndex == 2);
+            comboBoxScheduledInstallDay.Enabled = activeFields;
+            numScheduledInstallTime.Enabled = activeFields;
+        }
+
         #endregion
 
         #region WebCalls
@@ -326,7 +358,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         private void action_ShowWSUSHP_01(object sender, EventArgs e)
         {
-            openHomepage("http://technet.microsoft.com/de-de/library/cc782066(WS.10).aspx");
+            openHomepage("http://technet.microsoft.com/en-us/library/cc720464(v=ws.10).aspx");
         }
 
         private void action_ShowKB328010(object sender, EventArgs e)
@@ -408,5 +440,6 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         }
 
         #endregion
+
     }
 }

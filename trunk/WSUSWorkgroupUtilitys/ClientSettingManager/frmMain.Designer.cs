@@ -54,7 +54,6 @@
             this.generateNewClientIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectHomepageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.licenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
@@ -71,41 +70,63 @@
             this.txtGroupName = new System.Windows.Forms.TextBox();
             this.txtWSUSStateServer = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.chkNoRebootWithUser = new System.Windows.Forms.CheckBox();
+            this.chkDisableWindowsUpdateAccess = new System.Windows.Forms.CheckBox();
+            this.chkAcceptTrustedPublisherCerts = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.chkEnableRebootDelay = new System.Windows.Forms.CheckBox();
+            this.chkEnableUpdateInterval = new System.Windows.Forms.CheckBox();
+            this.chkRebootWarningTimeout = new System.Windows.Forms.CheckBox();
+            this.chkRescheduleWaitTime = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.saveRegFile_Dialog = new System.Windows.Forms.SaveFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numScheduledInstallTime = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.comboBoxScheduledInstallDay = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBoxAUOptions = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.chkNonAdminInstall = new System.Windows.Forms.CheckBox();
-            this.chkEnableRebootDelay = new System.Windows.Forms.CheckBox();
-            this.chkNoRebootWithUser = new System.Windows.Forms.CheckBox();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.chkAutoInstallMinor = new System.Windows.Forms.CheckBox();
-            this.chkEnableUpdateInterval = new System.Windows.Forms.CheckBox();
-            this.numRebootDelayTime = new System.Windows.Forms.NumericUpDown();
-            this.numUpdateInterval = new System.Windows.Forms.NumericUpDown();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this.chkNonAdminInstall = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.numUpdateInterval = new System.Windows.Forms.NumericUpDown();
+            this.numRebootDelayTime = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numRescheduleWaitTime = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numRebootWarningTimeout = new System.Windows.Forms.NumericUpDown();
             this.errorProviderNet = new System.Windows.Forms.ErrorProvider(this.components);
             this.errorProviderOK = new System.Windows.Forms.ErrorProvider(this.components);
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.comboBoxAUOptions = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorProviderRed)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numRebootDelayTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numUpdateInterval)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProviderNet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProviderOK)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numScheduledInstallTime)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numUpdateInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRebootDelayTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRescheduleWaitTime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRebootWarningTimeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderNet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderOK)).BeginInit();
             this.SuspendLayout();
             // 
             // errorProviderRed
@@ -289,7 +310,6 @@
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem,
-            this.checkUpdatesToolStripMenuItem,
             this.projectHomepageToolStripMenuItem,
             this.licenseToolStripMenuItem,
             this.toolStripMenuItem3,
@@ -305,14 +325,6 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.action_ShowAbout);
-            // 
-            // checkUpdatesToolStripMenuItem
-            // 
-            this.checkUpdatesToolStripMenuItem.Enabled = false;
-            this.checkUpdatesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("checkUpdatesToolStripMenuItem.Image")));
-            this.checkUpdatesToolStripMenuItem.Name = "checkUpdatesToolStripMenuItem";
-            this.checkUpdatesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.checkUpdatesToolStripMenuItem.Text = "&Check for updates";
             // 
             // projectHomepageToolStripMenuItem
             // 
@@ -408,7 +420,7 @@
             this.chkEnableGroup.Size = new System.Drawing.Size(211, 17);
             this.chkEnableGroup.TabIndex = 12;
             this.chkEnableGroup.Text = "Put this client to special WSUS - Group";
-            this.toolTip1.SetToolTip(this.chkEnableGroup, "If this option is enabled, this computer will use the wsus-groups to get updates");
+            this.toolTip1.SetToolTip(this.chkEnableGroup, "Use client-side targeting. ");
             this.chkEnableGroup.UseVisualStyleBackColor = true;
             this.chkEnableGroup.CheckStateChanged += new System.EventHandler(this.chkEnableGroup_CheckStateChanged);
             // 
@@ -433,13 +445,121 @@
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(11, 106);
+            this.label5.Location = new System.Drawing.Point(24, 97);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(72, 19);
             this.label5.TabIndex = 22;
             this.label5.Text = "delay time:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.toolTip1.SetToolTip(this.label5, "Is time in minutes after the user is repeatedly prompted to restart");
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(11, 61);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(132, 17);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "WSUS Status Server:";
+            this.toolTip1.SetToolTip(this.label2, resources.GetString("label2.ToolTip"));
+            // 
+            // chkNoRebootWithUser
+            // 
+            this.chkNoRebootWithUser.AutoSize = true;
+            this.chkNoRebootWithUser.Location = new System.Drawing.Point(23, 169);
+            this.chkNoRebootWithUser.Name = "chkNoRebootWithUser";
+            this.chkNoRebootWithUser.Size = new System.Drawing.Size(154, 17);
+            this.chkNoRebootWithUser.TabIndex = 26;
+            this.chkNoRebootWithUser.Text = "No reboot if user logged on";
+            this.toolTip1.SetToolTip(this.chkNoRebootWithUser, "If checked, the logged on users can decide to reboot (or  not) the computer. \r\nIf" +
+        " unchecked, Automatic Updates notifies the user that the computer will restart i" +
+        "n 5 minutes.");
+            this.chkNoRebootWithUser.UseVisualStyleBackColor = true;
+            // 
+            // chkDisableWindowsUpdateAccess
+            // 
+            this.chkDisableWindowsUpdateAccess.AutoSize = true;
+            this.chkDisableWindowsUpdateAccess.Location = new System.Drawing.Point(6, 171);
+            this.chkDisableWindowsUpdateAccess.Name = "chkDisableWindowsUpdateAccess";
+            this.chkDisableWindowsUpdateAccess.Size = new System.Drawing.Size(183, 17);
+            this.chkDisableWindowsUpdateAccess.TabIndex = 30;
+            this.chkDisableWindowsUpdateAccess.Text = "Disable Windows Update access";
+            this.toolTip1.SetToolTip(this.chkDisableWindowsUpdateAccess, "Prevent direct access to windows update from end user.");
+            this.chkDisableWindowsUpdateAccess.UseVisualStyleBackColor = true;
+            // 
+            // chkAcceptTrustedPublisherCerts
+            // 
+            this.chkAcceptTrustedPublisherCerts.AutoSize = true;
+            this.chkAcceptTrustedPublisherCerts.Location = new System.Drawing.Point(3, 13);
+            this.chkAcceptTrustedPublisherCerts.Name = "chkAcceptTrustedPublisherCerts";
+            this.chkAcceptTrustedPublisherCerts.Size = new System.Drawing.Size(167, 17);
+            this.chkAcceptTrustedPublisherCerts.TabIndex = 31;
+            this.chkAcceptTrustedPublisherCerts.Text = "Accept trusted publisher Certs";
+            this.toolTip1.SetToolTip(this.chkAcceptTrustedPublisherCerts, "The WSUS server will distribute signed third-party updates if available");
+            this.chkAcceptTrustedPublisherCerts.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(4, 59);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(72, 19);
+            this.label9.TabIndex = 30;
+            this.label9.Text = "delay time:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // chkEnableRebootDelay
+            // 
+            this.chkEnableRebootDelay.AutoSize = true;
+            this.chkEnableRebootDelay.Location = new System.Drawing.Point(23, 77);
+            this.chkEnableRebootDelay.Name = "chkEnableRebootDelay";
+            this.chkEnableRebootDelay.Size = new System.Drawing.Size(120, 17);
+            this.chkEnableRebootDelay.TabIndex = 27;
+            this.chkEnableRebootDelay.Text = "Enable reboot delay";
+            this.toolTip1.SetToolTip(this.chkEnableRebootDelay, "Time between prompting for a schedule restart");
+            this.chkEnableRebootDelay.UseVisualStyleBackColor = true;
+            // 
+            // chkEnableUpdateInterval
+            // 
+            this.chkEnableUpdateInterval.AutoSize = true;
+            this.chkEnableUpdateInterval.Location = new System.Drawing.Point(23, 13);
+            this.chkEnableUpdateInterval.Name = "chkEnableUpdateInterval";
+            this.chkEnableUpdateInterval.Size = new System.Drawing.Size(166, 17);
+            this.chkEnableUpdateInterval.TabIndex = 25;
+            this.chkEnableUpdateInterval.Text = "Enable auto update detection";
+            this.toolTip1.SetToolTip(this.chkEnableUpdateInterval, "Time between detection cycles");
+            this.chkEnableUpdateInterval.UseVisualStyleBackColor = true;
+            // 
+            // chkRebootWarningTimeout
+            // 
+            this.chkRebootWarningTimeout.AutoSize = true;
+            this.chkRebootWarningTimeout.Location = new System.Drawing.Point(3, 39);
+            this.chkRebootWarningTimeout.Name = "chkRebootWarningTimeout";
+            this.chkRebootWarningTimeout.Size = new System.Drawing.Size(115, 17);
+            this.chkRebootWarningTimeout.TabIndex = 32;
+            this.chkRebootWarningTimeout.Text = "Warn about reboot";
+            this.toolTip1.SetToolTip(this.chkRebootWarningTimeout, "Length, in minutes, of the restart warning countdown after installing updates wit" +
+        "h a deadline or scheduled updates.");
+            this.chkRebootWarningTimeout.UseVisualStyleBackColor = true;
+            // 
+            // chkRescheduleWaitTime
+            // 
+            this.chkRescheduleWaitTime.AutoSize = true;
+            this.chkRescheduleWaitTime.Location = new System.Drawing.Point(3, 88);
+            this.chkRescheduleWaitTime.Name = "chkRescheduleWaitTime";
+            this.chkRescheduleWaitTime.Size = new System.Drawing.Size(134, 17);
+            this.chkRescheduleWaitTime.TabIndex = 36;
+            this.chkRescheduleWaitTime.Text = "Reschedule Wait Time";
+            this.toolTip1.SetToolTip(this.chkRescheduleWaitTime, "Time, in minutes, that Automatic Updates should wait at startup before applying u" +
+        "pdates from a missed scheduled installation time. ");
+            this.chkRescheduleWaitTime.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(4, 108);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(72, 19);
+            this.label11.TabIndex = 34;
+            this.label11.Text = "delay time:";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // saveRegFile_Dialog
             // 
@@ -467,184 +587,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Main";
             // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(11, 140);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 17);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Groupname:";
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(11, 61);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(132, 17);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "WSUS Status Server:";
-            this.toolTip1.SetToolTip(this.label2, "Usually same as WSUS - Server");
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(11, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 17);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "WSUS - Server:";
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.chkNonAdminInstall);
-            this.tabPage1.Controls.Add(this.chkEnableRebootDelay);
-            this.tabPage1.Controls.Add(this.chkNoRebootWithUser);
-            this.tabPage1.Controls.Add(this.chkAutoInstallMinor);
-            this.tabPage1.Controls.Add(this.chkEnableUpdateInterval);
-            this.tabPage1.Controls.Add(this.numRebootDelayTime);
-            this.tabPage1.Controls.Add(this.numUpdateInterval);
-            this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.label7);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(591, 270);
-            this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Advanced";
-            // 
-            // chkNonAdminInstall
-            // 
-            this.chkNonAdminInstall.AutoSize = true;
-            this.chkNonAdminInstall.Location = new System.Drawing.Point(9, 201);
-            this.chkNonAdminInstall.Name = "chkNonAdminInstall";
-            this.chkNonAdminInstall.Size = new System.Drawing.Size(189, 17);
-            this.chkNonAdminInstall.TabIndex = 28;
-            this.chkNonAdminInstall.Text = "allow non admins to install updates";
-            this.chkNonAdminInstall.UseVisualStyleBackColor = true;
-            // 
-            // chkEnableRebootDelay
-            // 
-            this.chkEnableRebootDelay.AutoSize = true;
-            this.chkEnableRebootDelay.Location = new System.Drawing.Point(9, 86);
-            this.chkEnableRebootDelay.Name = "chkEnableRebootDelay";
-            this.chkEnableRebootDelay.Size = new System.Drawing.Size(119, 17);
-            this.chkEnableRebootDelay.TabIndex = 27;
-            this.chkEnableRebootDelay.Text = "enable reboot delay";
-            this.chkEnableRebootDelay.UseVisualStyleBackColor = true;
-            // 
-            // chkNoRebootWithUser
-            // 
-            this.chkNoRebootWithUser.AutoSize = true;
-            this.chkNoRebootWithUser.Location = new System.Drawing.Point(9, 178);
-            this.chkNoRebootWithUser.Name = "chkNoRebootWithUser";
-            this.chkNoRebootWithUser.Size = new System.Drawing.Size(152, 17);
-            this.chkNoRebootWithUser.TabIndex = 26;
-            this.chkNoRebootWithUser.Text = "no reboot if user logged on";
-            this.chkNoRebootWithUser.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoInstallMinor
-            // 
-            this.chkAutoInstallMinor.AutoSize = true;
-            this.chkAutoInstallMinor.Location = new System.Drawing.Point(10, 155);
-            this.chkAutoInstallMinor.Name = "chkAutoInstallMinor";
-            this.chkAutoInstallMinor.Size = new System.Drawing.Size(145, 17);
-            this.chkAutoInstallMinor.TabIndex = 26;
-            this.chkAutoInstallMinor.Text = "auto install minor updates";
-            this.chkAutoInstallMinor.UseVisualStyleBackColor = true;
-            // 
-            // chkEnableUpdateInterval
-            // 
-            this.chkEnableUpdateInterval.AutoSize = true;
-            this.chkEnableUpdateInterval.Location = new System.Drawing.Point(9, 22);
-            this.chkEnableUpdateInterval.Name = "chkEnableUpdateInterval";
-            this.chkEnableUpdateInterval.Size = new System.Drawing.Size(165, 17);
-            this.chkEnableUpdateInterval.TabIndex = 25;
-            this.chkEnableUpdateInterval.Text = "enable auto update detection";
-            this.chkEnableUpdateInterval.UseVisualStyleBackColor = true;
-            // 
-            // numRebootDelayTime
-            // 
-            this.numRebootDelayTime.Location = new System.Drawing.Point(86, 109);
-            this.numRebootDelayTime.Maximum = new decimal(new int[] {
-            1200,
-            0,
-            0,
-            0});
-            this.numRebootDelayTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numRebootDelayTime.Name = "numRebootDelayTime";
-            this.numRebootDelayTime.Size = new System.Drawing.Size(42, 20);
-            this.numRebootDelayTime.TabIndex = 23;
-            this.numRebootDelayTime.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            // 
-            // numUpdateInterval
-            // 
-            this.numUpdateInterval.Location = new System.Drawing.Point(86, 45);
-            this.numUpdateInterval.Maximum = new decimal(new int[] {
-            48,
-            0,
-            0,
-            0});
-            this.numUpdateInterval.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numUpdateInterval.Name = "numUpdateInterval";
-            this.numUpdateInterval.Size = new System.Drawing.Size(42, 20);
-            this.numUpdateInterval.TabIndex = 23;
-            this.numUpdateInterval.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
-            // label8
-            // 
-            this.label8.Location = new System.Drawing.Point(134, 42);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(42, 19);
-            this.label8.TabIndex = 22;
-            this.label8.Text = "h";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // label7
-            // 
-            this.label7.Location = new System.Drawing.Point(134, 106);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(42, 19);
-            this.label7.TabIndex = 22;
-            this.label7.Text = "min.";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(14, 42);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 19);
-            this.label4.TabIndex = 22;
-            this.label4.Text = "frequency:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
-            // errorProviderNet
-            // 
-            this.errorProviderNet.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
-            this.errorProviderNet.ContainerControl = this;
-            this.errorProviderNet.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderNet.Icon")));
-            // 
-            // errorProviderOK
-            // 
-            this.errorProviderOK.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
-            this.errorProviderOK.ContainerControl = this;
-            this.errorProviderOK.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderOK.Icon")));
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -663,11 +605,102 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.label15);
+            this.splitContainer1.Panel2.Controls.Add(this.numScheduledInstallTime);
+            this.splitContainer1.Panel2.Controls.Add(this.label14);
+            this.splitContainer1.Panel2.Controls.Add(this.label13);
+            this.splitContainer1.Panel2.Controls.Add(this.comboBoxScheduledInstallDay);
+            this.splitContainer1.Panel2.Controls.Add(this.chkDisableWindowsUpdateAccess);
             this.splitContainer1.Panel2.Controls.Add(this.label6);
             this.splitContainer1.Panel2.Controls.Add(this.comboBoxAUOptions);
             this.splitContainer1.Size = new System.Drawing.Size(585, 221);
             this.splitContainer1.SplitterDistance = 262;
             this.splitContainer1.TabIndex = 20;
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(11, 140);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 17);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Groupname:";
+            this.toolTip1.SetToolTip(this.label3, "Name of the computer group to which the computer belongs, used to implement clien" +
+        "t-side targeting (for example, \"TestServers.\") ");
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(11, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(89, 17);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "WSUS - Server:";
+            this.toolTip1.SetToolTip(this.label1, "HTTP(S) URL of the WSUS server used by Automatic Updates and (by default) API cal" +
+        "lers. This policy is paired with WUStatusServer; both must be set to the same va" +
+        "lue in order for them to be valid.");
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(145, 92);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(16, 13);
+            this.label15.TabIndex = 35;
+            this.label15.Text = "h.";
+            // 
+            // numScheduledInstallTime
+            // 
+            this.numScheduledInstallTime.Location = new System.Drawing.Point(97, 90);
+            this.numScheduledInstallTime.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.numScheduledInstallTime.Name = "numScheduledInstallTime";
+            this.numScheduledInstallTime.Size = new System.Drawing.Size(42, 20);
+            this.numScheduledInstallTime.TabIndex = 34;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(30, 92);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.TabIndex = 33;
+            this.label14.Text = "Install Time: ";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(30, 65);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 13);
+            this.label13.TabIndex = 32;
+            this.label13.Text = "Install Day: ";
+            // 
+            // comboBoxScheduledInstallDay
+            // 
+            this.comboBoxScheduledInstallDay.FormattingEnabled = true;
+            this.comboBoxScheduledInstallDay.Items.AddRange(new object[] {
+            "Every day",
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday"});
+            this.comboBoxScheduledInstallDay.Location = new System.Drawing.Point(97, 62);
+            this.comboBoxScheduledInstallDay.Name = "comboBoxScheduledInstallDay";
+            this.comboBoxScheduledInstallDay.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxScheduledInstallDay.TabIndex = 31;
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(3, 13);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 17);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "Auto update mode";
             // 
             // comboBoxAUOptions
             // 
@@ -681,14 +714,220 @@
             this.comboBoxAUOptions.Name = "comboBoxAUOptions";
             this.comboBoxAUOptions.Size = new System.Drawing.Size(298, 21);
             this.comboBoxAUOptions.TabIndex = 0;
+            this.comboBoxAUOptions.SelectedIndexChanged += new System.EventHandler(this.comboBoxAUOptions_SelectedIndexChanged);
             // 
-            // label6
+            // tabPage1
             // 
-            this.label6.Location = new System.Drawing.Point(3, 13);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(89, 17);
-            this.label6.TabIndex = 20;
-            this.label6.Text = "Auto update mode";
+            this.tabPage1.Controls.Add(this.splitContainer2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(591, 227);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Advanced";
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.chkAutoInstallMinor);
+            this.splitContainer2.Panel1.Controls.Add(this.chkNonAdminInstall);
+            this.splitContainer2.Panel1.Controls.Add(this.label4);
+            this.splitContainer2.Panel1.Controls.Add(this.chkEnableRebootDelay);
+            this.splitContainer2.Panel1.Controls.Add(this.label5);
+            this.splitContainer2.Panel1.Controls.Add(this.chkNoRebootWithUser);
+            this.splitContainer2.Panel1.Controls.Add(this.label7);
+            this.splitContainer2.Panel1.Controls.Add(this.label8);
+            this.splitContainer2.Panel1.Controls.Add(this.chkEnableUpdateInterval);
+            this.splitContainer2.Panel1.Controls.Add(this.numUpdateInterval);
+            this.splitContainer2.Panel1.Controls.Add(this.numRebootDelayTime);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.chkRescheduleWaitTime);
+            this.splitContainer2.Panel2.Controls.Add(this.label11);
+            this.splitContainer2.Panel2.Controls.Add(this.label12);
+            this.splitContainer2.Panel2.Controls.Add(this.numRescheduleWaitTime);
+            this.splitContainer2.Panel2.Controls.Add(this.chkRebootWarningTimeout);
+            this.splitContainer2.Panel2.Controls.Add(this.label9);
+            this.splitContainer2.Panel2.Controls.Add(this.chkAcceptTrustedPublisherCerts);
+            this.splitContainer2.Panel2.Controls.Add(this.label10);
+            this.splitContainer2.Panel2.Controls.Add(this.numRebootWarningTimeout);
+            this.splitContainer2.Size = new System.Drawing.Size(585, 221);
+            this.splitContainer2.SplitterDistance = 299;
+            this.splitContainer2.TabIndex = 29;
+            // 
+            // chkAutoInstallMinor
+            // 
+            this.chkAutoInstallMinor.AutoSize = true;
+            this.chkAutoInstallMinor.Location = new System.Drawing.Point(23, 146);
+            this.chkAutoInstallMinor.Name = "chkAutoInstallMinor";
+            this.chkAutoInstallMinor.Size = new System.Drawing.Size(146, 17);
+            this.chkAutoInstallMinor.TabIndex = 26;
+            this.chkAutoInstallMinor.Text = "Auto install minor updates";
+            this.toolTip1.SetToolTip(this.chkAutoInstallMinor, "0 = Treat minor updates as other updates are treated.\r\n1 = Silently install minor" +
+        " updates.");
+            this.chkAutoInstallMinor.UseVisualStyleBackColor = true;
+            // 
+            // chkNonAdminInstall
+            // 
+            this.chkNonAdminInstall.AutoSize = true;
+            this.chkNonAdminInstall.Location = new System.Drawing.Point(23, 192);
+            this.chkNonAdminInstall.Name = "chkNonAdminInstall";
+            this.chkNonAdminInstall.Size = new System.Drawing.Size(190, 17);
+            this.chkNonAdminInstall.TabIndex = 28;
+            this.chkNonAdminInstall.Text = "Allow non admins to install updates";
+            this.toolTip1.SetToolTip(this.chkNonAdminInstall, "Users in the Users security group are allowed to approve or disapprove updates.");
+            this.chkNonAdminInstall.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(27, 33);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(69, 19);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "frequency:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(152, 97);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(42, 19);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "min.";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(147, 33);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(42, 19);
+            this.label8.TabIndex = 22;
+            this.label8.Text = "h.";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // numUpdateInterval
+            // 
+            this.numUpdateInterval.Location = new System.Drawing.Point(99, 36);
+            this.numUpdateInterval.Maximum = new decimal(new int[] {
+            22,
+            0,
+            0,
+            0});
+            this.numUpdateInterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numUpdateInterval.Name = "numUpdateInterval";
+            this.numUpdateInterval.Size = new System.Drawing.Size(42, 20);
+            this.numUpdateInterval.TabIndex = 23;
+            this.numUpdateInterval.Value = new decimal(new int[] {
+            22,
+            0,
+            0,
+            0});
+            // 
+            // numRebootDelayTime
+            // 
+            this.numRebootDelayTime.Location = new System.Drawing.Point(99, 100);
+            this.numRebootDelayTime.Maximum = new decimal(new int[] {
+            1440,
+            0,
+            0,
+            0});
+            this.numRebootDelayTime.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numRebootDelayTime.Name = "numRebootDelayTime";
+            this.numRebootDelayTime.Size = new System.Drawing.Size(47, 20);
+            this.numRebootDelayTime.TabIndex = 23;
+            this.numRebootDelayTime.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(127, 108);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(42, 19);
+            this.label12.TabIndex = 33;
+            this.label12.Text = "min.";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // numRescheduleWaitTime
+            // 
+            this.numRescheduleWaitTime.Location = new System.Drawing.Point(79, 111);
+            this.numRescheduleWaitTime.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.numRescheduleWaitTime.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numRescheduleWaitTime.Name = "numRescheduleWaitTime";
+            this.numRescheduleWaitTime.Size = new System.Drawing.Size(42, 20);
+            this.numRescheduleWaitTime.TabIndex = 35;
+            this.numRescheduleWaitTime.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(127, 59);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(42, 19);
+            this.label10.TabIndex = 29;
+            this.label10.Text = "min.";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // numRebootWarningTimeout
+            // 
+            this.numRebootWarningTimeout.Location = new System.Drawing.Point(79, 62);
+            this.numRebootWarningTimeout.Maximum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.numRebootWarningTimeout.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numRebootWarningTimeout.Name = "numRebootWarningTimeout";
+            this.numRebootWarningTimeout.Size = new System.Drawing.Size(42, 20);
+            this.numRebootWarningTimeout.TabIndex = 31;
+            this.numRebootWarningTimeout.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // errorProviderNet
+            // 
+            this.errorProviderNet.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProviderNet.ContainerControl = this;
+            this.errorProviderNet.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderNet.Icon")));
+            // 
+            // errorProviderOK
+            // 
+            this.errorProviderOK.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProviderOK.ContainerControl = this;
+            this.errorProviderOK.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProviderOK.Icon")));
             // 
             // frmMain
             // 
@@ -713,16 +952,24 @@
             this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numRebootDelayTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numUpdateInterval)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProviderNet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProviderOK)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numScheduledInstallTime)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numUpdateInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRebootDelayTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRescheduleWaitTime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRebootWarningTimeout)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderNet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProviderOK)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -736,7 +983,6 @@
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem applicationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
@@ -793,6 +1039,22 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBoxAUOptions;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.CheckBox chkDisableWindowsUpdateAccess;
+        private System.Windows.Forms.CheckBox chkAcceptTrustedPublisherCerts;
+        private System.Windows.Forms.CheckBox chkRebootWarningTimeout;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numRebootWarningTimeout;
+        private System.Windows.Forms.CheckBox chkRescheduleWaitTime;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numRescheduleWaitTime;
+        private System.Windows.Forms.NumericUpDown numScheduledInstallTime;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ComboBox comboBoxScheduledInstallDay;
+        private System.Windows.Forms.Label label15;
     }
 }
 
