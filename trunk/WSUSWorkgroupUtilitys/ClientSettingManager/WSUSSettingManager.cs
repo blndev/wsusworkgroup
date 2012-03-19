@@ -169,7 +169,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     key = HKLM_WUAU; break;
                 default: throw new NotSupportedException();
             }
-            Microsoft.Win32.Registry.SetValue(key, Name, Value);
+            Microsoft.Win32.Registry.SetValue(key, Name, Value, ValueKind);
         }
 
         /// <summary>
@@ -184,7 +184,8 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                 switch (reg.GetValueKind(valueName))
                 {
                     case Microsoft.Win32.RegistryValueKind.DWord:
-                        sw.WriteLine("\"{0}\"=dword:{1}", valueName, Convert.ToInt64(reg.GetValue(valueName, "")).ToString("00000000"));
+                        string hexa = string.Format("{0:x}", reg.GetValue(valueName, ""));
+                        sw.WriteLine("\"{0}\"=dword:{1}", valueName, hexa);
                         break;
                     default:
                         sw.WriteLine("\"{0}\"=\"{1}\"", valueName, reg.GetValue(valueName, "").ToString());
