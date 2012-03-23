@@ -33,7 +33,29 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
         }
 
         #region UI Helper
+        private void fillCombos()
+        {
+            //Values based on: http://technet.microsoft.com/de-de/library/cc708449(v=ws.10).aspx
 
+            comboBoxAUOptions.Items.Clear();
+            comboBoxAUOptions.DisplayMember = "Value";
+            comboBoxAUOptions.Items.Add(new KeyValuePair<int, string>(2, "Notify before download"));
+            comboBoxAUOptions.Items.Add(new KeyValuePair<int, string>(3, "Automatically download and notify of installation"));
+            comboBoxAUOptions.Items.Add(new KeyValuePair<int, string>(4, "Automatically download and schedule installation"));
+            comboBoxAUOptions.Items.Add(new KeyValuePair<int, string>(5, "Automatic Updates is required and users can configure it"));
+
+            comboBoxScheduledInstallDay.Items.Clear();
+            comboBoxScheduledInstallDay.DisplayMember = "Value";
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(0, "Every day"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(1, "Sunday"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(2, "Monday"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(3, "Tuesday"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(4, "Wednesday"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(5, "Thursday"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(6, "Friday"));
+            comboBoxScheduledInstallDay.Items.Add(new KeyValuePair<int, string>(7, "Saturday"));
+
+        }
         /// <summary>
         /// Handles errors and show a message to the user
         /// </summary>
@@ -75,6 +97,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             System.Version ver = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             this.Text = String.Format("{0} V{1}.{2} Rev: {3}", Application.ProductName, ver.Major, ver.Minor, ver.Build);
 
+            fillCombos();
             ReadSettings(sender, e);
         }
 
@@ -191,52 +214,77 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         private void ReadSettings(object sender, EventArgs e)
         {
-            //read currentsettings without change reg
-            WSUSSettingManager wsmgr = new WSUSSettingManager();
-            txtWSUSServer.Text = wsmgr.WSUSServer;
-
-            txtWSUSStateServer.Text = wsmgr.WSUSStateServer;
-            chkEnableGroup.Checked = wsmgr.EnableGroupSettings;
-            txtGroupName.Text = wsmgr.ComputergroupName;
-            chkEnableUpdateInterval.Checked = wsmgr.DetectionFrequencyEnabled;
-
-            int adu = wsmgr.DetectionFrequency;
-            if (adu >= numUpdateInterval.Minimum && adu <= numUpdateInterval.Maximum)
-                numUpdateInterval.Value = adu;
-
-            chkEnableRebootDelay.Checked = wsmgr.RebootRelaunchTimeoutEnabled;
-
-            int rdl = wsmgr.RebootRelaunchTimeout;
-            if (rdl >= numRebootDelayTime.Minimum && rdl <= numRebootDelayTime.Maximum)
-                numRebootDelayTime.Value = rdl;
-
-            chkAutoInstallMinor.Checked = wsmgr.AutoInstallMinorUpdates;
-            chkNoRebootWithUser.Checked = !wsmgr.AllowRebootIfUserLoggedOn;
-            chkNonAdminInstall.Checked = wsmgr.AllowNonAdminInstall;
-
-            int? auOptions = wsmgr.AUOptions;
-            if (auOptions != null && auOptions >= 2 && auOptions <= 5)
+            try
             {
-                comboBoxAUOptions.SelectedIndex = wsmgr.AUOptions - 2; // -2 because range is from 2 to 5 in registry
+
+                //read currentsettings without change reg
+                WSUSSettingManager wsmgr = new WSUSSettingManager();
+                txtWSUSServer.Text = wsmgr.WSUSServer;
+
+                txtWSUSStateServer.Text = wsmgr.WSUSStateServer;
+                chkEnableGroup.Checked = wsmgr.EnableGroupSettings;
+                txtGroupName.Text = wsmgr.ComputergroupName;
+                chkEnableUpdateInterval.Checked = wsmgr.DetectionFrequencyEnabled;
+
+                int adu = wsmgr.DetectionFrequency;
+                if (adu >= numUpdateInterval.Minimum && adu <= numUpdateInterval.Maximum)
+                    numUpdateInterval.Value = adu;
+
+                chkEnableRebootDelay.Checked = wsmgr.RebootRelaunchTimeoutEnabled;
+
+                int rdl = wsmgr.RebootRelaunchTimeout;
+                if (rdl >= numRebootDelayTime.Minimum && rdl <= numRebootDelayTime.Maximum)
+                    numRebootDelayTime.Value = rdl;
+
+                chkAutoInstallMinor.Checked = wsmgr.AutoInstallMinorUpdates;
+                chkNoRebootWithUser.Checked = !wsmgr.AllowRebootIfUserLoggedOn;
+                chkNonAdminInstall.Checked = wsmgr.AllowNonAdminInstall;
+
+                int? auOptions = wsmgr.AUOptions;
+                if (auOptions != null)
+                {
+                    selectKey(comboBoxAUOptions, wsmgr.AUOptions);
+                }
+                else
+                {
+                    comboBoxAUOptions.SelectedIndex = -1; // If no reg settings, we don't select any index by default
+                }
+
+                selectKey(comboBoxScheduledInstallDay, wsmgr.ScheduledInstallDay);
+
+                comboBoxAUOptions_SelectedIndexChanged(sender, e); // We check what is selected in the combo box.
+                selectKey(comboBoxScheduledInstallDay, wsmgr.ScheduledInstallDay);
+
+                numScheduledInstallTime.Value = wsmgr.ScheduledInstallTime;
+
+                chkDisableWindowsUpdateAccess.Checked = wsmgr.DisableWindowsUpdateAccess;
+                chkAcceptTrustedPublisherCerts.Checked = wsmgr.AcceptTrustedPublisherCerts;
+
+                chkRebootWarningTimeout.Checked = wsmgr.RebootWarningTimeoutEnabled;
+                numRebootWarningTimeout.Value = wsmgr.RebootWarningTimeout;
+
+                chkRescheduleWaitTime.Checked = wsmgr.RescheduleWaitTimeEnabled;
+                numRescheduleWaitTime.Value = wsmgr.RescheduleWaitTime;
+
             }
-            else
+            catch (Exception ex)
             {
-                comboBoxAUOptions.SelectedIndex = -1; // If no reg settings, we don't select any index by default
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                HandleError(ex);
             }
-            comboBoxAUOptions_SelectedIndexChanged(sender, e); // We check what is selected in the combo box.
+        }
 
-            comboBoxScheduledInstallDay.SelectedIndex = wsmgr.ScheduledInstallDay;
-            numScheduledInstallTime.Value = wsmgr.ScheduledInstallTime;
-
-            chkDisableWindowsUpdateAccess.Checked = wsmgr.DisableWindowsUpdateAccess;
-            chkAcceptTrustedPublisherCerts.Checked = wsmgr.AcceptTrustedPublisherCerts;
-
-            chkRebootWarningTimeout.Checked = wsmgr.RebootWarningTimeoutEnabled;
-            numRebootWarningTimeout.Value = wsmgr.RebootWarningTimeout;
-
-            chkRescheduleWaitTime.Checked = wsmgr.RescheduleWaitTimeEnabled;
-            numRescheduleWaitTime.Value = wsmgr.RescheduleWaitTime;
-
+        private void selectKey(ComboBox combo, int key)
+        {
+            for (int i = 0; i < combo.Items.Count; i++)
+            {
+                KeyValuePair<int, string> kvp = (KeyValuePair<int, string>)combo.Items[i];
+                if (kvp.Key == key)
+                {
+                    combo.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void cmdWriteSettings_Click(object sender, EventArgs e)
@@ -267,9 +315,11 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
                     man.AllowNonAdminInstall = chkNonAdminInstall.Checked;
                     if (comboBoxAUOptions.SelectedIndex != -1) // Only if a value is selected
                     {
-                        man.AUOptions = comboBoxAUOptions.SelectedIndex + 2; // +2 because AUOptions range = 2|3|4|5
+                        man.AUOptions = ((KeyValuePair<int, string>)comboBoxAUOptions.SelectedItem).Key;
                     }
-                    man.ScheduledInstallDay = comboBoxScheduledInstallDay.SelectedIndex;
+                    if (comboBoxScheduledInstallDay.SelectedItem != null)
+                        man.ScheduledInstallDay = ((KeyValuePair<int, string>)comboBoxScheduledInstallDay.SelectedItem).Key;
+
                     man.ScheduledInstallTime = (int)numScheduledInstallTime.Value;
                     man.DisableWindowsUpdateAccess = chkDisableWindowsUpdateAccess.Checked;
                     man.AcceptTrustedPublisherCerts = chkAcceptTrustedPublisherCerts.Checked;
@@ -327,9 +377,14 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
 
         private void comboBoxAUOptions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // We only activate fields when AUOptions = 4 (aka 2 in the list)
+            // We only activate fields when AUOptions = 4 
             // 4 = Automatically download and schedule installation. (Only valid if values exist for ScheduledInstallDay and ScheduledInstallTime.)
-            bool activeFields = (comboBoxAUOptions.SelectedIndex == 2);
+            bool activeFields = false;
+            if (comboBoxAUOptions.SelectedItem != null)
+            {
+                KeyValuePair<int, string> kvp = (KeyValuePair<int, string>)comboBoxAUOptions.SelectedItem;
+                activeFields = kvp.Key == 4;
+            }
             comboBoxScheduledInstallDay.Enabled = activeFields;
             numScheduledInstallTime.Enabled = activeFields;
         }

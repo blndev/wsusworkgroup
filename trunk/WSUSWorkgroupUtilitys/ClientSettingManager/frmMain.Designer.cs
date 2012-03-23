@@ -74,18 +74,20 @@
             this.chkNoRebootWithUser = new System.Windows.Forms.CheckBox();
             this.chkDisableWindowsUpdateAccess = new System.Windows.Forms.CheckBox();
             this.chkAcceptTrustedPublisherCerts = new System.Windows.Forms.CheckBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.chkEnableRebootDelay = new System.Windows.Forms.CheckBox();
             this.chkEnableUpdateInterval = new System.Windows.Forms.CheckBox();
             this.chkRebootWarningTimeout = new System.Windows.Forms.CheckBox();
             this.chkRescheduleWaitTime = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.chkAutoInstallMinor = new System.Windows.Forms.CheckBox();
+            this.chkNonAdminInstall = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.saveRegFile_Dialog = new System.Windows.Forms.SaveFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.numScheduledInstallTime = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
@@ -95,8 +97,6 @@
             this.comboBoxAUOptions = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.chkAutoInstallMinor = new System.Windows.Forms.CheckBox();
-            this.chkNonAdminInstall = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -497,15 +497,6 @@
             this.toolTip1.SetToolTip(this.chkAcceptTrustedPublisherCerts, "The WSUS server will distribute signed third-party updates if available");
             this.chkAcceptTrustedPublisherCerts.UseVisualStyleBackColor = true;
             // 
-            // label9
-            // 
-            this.label9.Location = new System.Drawing.Point(4, 59);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(72, 19);
-            this.label9.TabIndex = 30;
-            this.label9.Text = "delay time:";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
             // chkEnableRebootDelay
             // 
             this.chkEnableRebootDelay.AutoSize = true;
@@ -551,6 +542,59 @@
             this.toolTip1.SetToolTip(this.chkRescheduleWaitTime, "Time, in minutes, that Automatic Updates should wait at startup before applying u" +
         "pdates from a missed scheduled installation time. ");
             this.chkRescheduleWaitTime.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(11, 140);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 17);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Groupname:";
+            this.toolTip1.SetToolTip(this.label3, "Name of the computer group to which the computer belongs, used to implement clien" +
+        "t-side targeting (for example, \"TestServers.\") ");
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(11, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(89, 17);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "WSUS - Server:";
+            this.toolTip1.SetToolTip(this.label1, "HTTP(S) URL of the WSUS server used by Automatic Updates and (by default) API cal" +
+        "lers. This policy is paired with WUStatusServer; both must be set to the same va" +
+        "lue in order for them to be valid.");
+            // 
+            // chkAutoInstallMinor
+            // 
+            this.chkAutoInstallMinor.AutoSize = true;
+            this.chkAutoInstallMinor.Location = new System.Drawing.Point(23, 146);
+            this.chkAutoInstallMinor.Name = "chkAutoInstallMinor";
+            this.chkAutoInstallMinor.Size = new System.Drawing.Size(146, 17);
+            this.chkAutoInstallMinor.TabIndex = 26;
+            this.chkAutoInstallMinor.Text = "Auto install minor updates";
+            this.toolTip1.SetToolTip(this.chkAutoInstallMinor, "0 = Treat minor updates as other updates are treated.\r\n1 = Silently install minor" +
+        " updates.");
+            this.chkAutoInstallMinor.UseVisualStyleBackColor = true;
+            // 
+            // chkNonAdminInstall
+            // 
+            this.chkNonAdminInstall.AutoSize = true;
+            this.chkNonAdminInstall.Location = new System.Drawing.Point(23, 192);
+            this.chkNonAdminInstall.Name = "chkNonAdminInstall";
+            this.chkNonAdminInstall.Size = new System.Drawing.Size(190, 17);
+            this.chkNonAdminInstall.TabIndex = 28;
+            this.chkNonAdminInstall.Text = "Allow non admins to install updates";
+            this.toolTip1.SetToolTip(this.chkNonAdminInstall, "Users in the Users security group are allowed to approve or disapprove updates.");
+            this.chkNonAdminInstall.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(4, 59);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(72, 19);
+            this.label9.TabIndex = 30;
+            this.label9.Text = "delay time:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // label11
             // 
@@ -617,27 +661,6 @@
             this.splitContainer1.SplitterDistance = 262;
             this.splitContainer1.TabIndex = 20;
             // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(11, 140);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 17);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Groupname:";
-            this.toolTip1.SetToolTip(this.label3, "Name of the computer group to which the computer belongs, used to implement clien" +
-        "t-side targeting (for example, \"TestServers.\") ");
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(11, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 17);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "WSUS - Server:";
-            this.toolTip1.SetToolTip(this.label1, "HTTP(S) URL of the WSUS server used by Automatic Updates and (by default) API cal" +
-        "lers. This policy is paired with WUStatusServer; both must be set to the same va" +
-        "lue in order for them to be valid.");
-            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -679,6 +702,7 @@
             // 
             // comboBoxScheduledInstallDay
             // 
+            this.comboBoxScheduledInstallDay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxScheduledInstallDay.FormattingEnabled = true;
             this.comboBoxScheduledInstallDay.Items.AddRange(new object[] {
             "Every day",
@@ -704,6 +728,7 @@
             // 
             // comboBoxAUOptions
             // 
+            this.comboBoxAUOptions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAUOptions.FormattingEnabled = true;
             this.comboBoxAUOptions.Items.AddRange(new object[] {
             "Notify before download",
@@ -760,29 +785,6 @@
             this.splitContainer2.Size = new System.Drawing.Size(585, 221);
             this.splitContainer2.SplitterDistance = 299;
             this.splitContainer2.TabIndex = 29;
-            // 
-            // chkAutoInstallMinor
-            // 
-            this.chkAutoInstallMinor.AutoSize = true;
-            this.chkAutoInstallMinor.Location = new System.Drawing.Point(23, 146);
-            this.chkAutoInstallMinor.Name = "chkAutoInstallMinor";
-            this.chkAutoInstallMinor.Size = new System.Drawing.Size(146, 17);
-            this.chkAutoInstallMinor.TabIndex = 26;
-            this.chkAutoInstallMinor.Text = "Auto install minor updates";
-            this.toolTip1.SetToolTip(this.chkAutoInstallMinor, "0 = Treat minor updates as other updates are treated.\r\n1 = Silently install minor" +
-        " updates.");
-            this.chkAutoInstallMinor.UseVisualStyleBackColor = true;
-            // 
-            // chkNonAdminInstall
-            // 
-            this.chkNonAdminInstall.AutoSize = true;
-            this.chkNonAdminInstall.Location = new System.Drawing.Point(23, 192);
-            this.chkNonAdminInstall.Name = "chkNonAdminInstall";
-            this.chkNonAdminInstall.Size = new System.Drawing.Size(190, 17);
-            this.chkNonAdminInstall.TabIndex = 28;
-            this.chkNonAdminInstall.Text = "Allow non admins to install updates";
-            this.toolTip1.SetToolTip(this.chkNonAdminInstall, "Users in the Users security group are allowed to approve or disapprove updates.");
-            this.chkNonAdminInstall.UseVisualStyleBackColor = true;
             // 
             // label4
             // 

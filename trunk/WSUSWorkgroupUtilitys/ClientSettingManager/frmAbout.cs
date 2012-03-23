@@ -34,7 +34,7 @@ namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager
             //  Ändern Sie die Einstellungen für Assemblyinformationen für Ihre Anwendung durch eine der folgenden Vorgehensweisen:
             //  - Projekt->Eigenschaften->Anwendung->Assemblyinformationen
             //  - AssemblyInfo.cs
-            this.Text = String.Format("Info über {0}", AssemblyTitle);
+            this.Text = String.Format("Informations about {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
