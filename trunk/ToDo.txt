@@ -1,2 +1,0 @@
-- ? Nutzung WSUS API für Programmgesteuertes Updaten
-- Gruppe muss im WSUS angelegt sein --> Meldung beim Schreiben der Settings
