@@ -22,14 +22,31 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WSUS - WorkGroup ClientSettingManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Codeplex DBedarf")]
+[assembly: AssemblyCompany("OSS - Codeplex")]
 [assembly: AssemblyProduct("WSUS - WorkGroup ClientSettingManager")]
-[assembly: AssemblyCopyright("Copyright ©  2010")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 
 [assembly: Guid("176b1a5b-0402-44b1-9dbf-ebfc11bf03da")]
 
-[assembly: AssemblyVersion("0.6.0.*")]
-[assembly: AssemblyFileVersion("0.6.0.0")]
+[assembly: AssemblyVersion("1.1.0.1")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
+/*
+ * History:
+ * V1.1.0.1     - (properly v0.6 but we upgraded to 1.1 because more then 500 downloads without problems)
+ *              Features:
+ *                 - support all settings in WSUS 3.0 SP1
+ *                 - advanced settings 
+ *                 - some layout rewrites
+ *                 
+ * 
+ * V0.5.14      - first Release 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
