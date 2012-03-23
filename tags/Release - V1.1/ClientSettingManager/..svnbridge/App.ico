@@ -1,0 +1,2 @@
+﻿<?xml version="1.0" encoding="utf-8"?><ItemProperties xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Properties><Property><Name>svn:ignore</Name><Value>*.[Tt][Mm][Pp] */[Oo]bj */[Bb]in */[Tt]emp */[Ddebug] */[Rr]elease *.vssscc *.vspscc *.scc *.suo *.dll *.exe *.msi *.pdb *.csproj.user *.rptproj.user *.rdl.data *.[Cc]ache obj bin
+</Value></Property><Property><Name>svn:mime-type</Name><Value>application/octet-stream</Value></Property></Properties></ItemProperties>
