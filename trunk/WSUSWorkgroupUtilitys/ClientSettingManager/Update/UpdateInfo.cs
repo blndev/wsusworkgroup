@@ -19,178 +19,45 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Codeplex.DBedarf.Update
+namespace Codeplex.DBedarf.WSUS.Workgroup.ClientSettingManager.Update
 {
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, IncludeInSchema = false)]
-    [System.Xml.Serialization.XmlRootAttribute(ElementName = "history", IsNullable = false)]
-    public class UpdateInfo
+    /// <summary>
+    /// Informations about the available Update
+    /// </summary>
+    struct UpdateInfo
     {
-
-        public static UpdateInfo GetInfo(string url)
+        public void Clear()
         {
-            ////TODO: WebDown + Auswertung
-            UpdateInfo retVal = new UpdateInfo();
-            //try
-            //{
-
-            //    string xml=System.IO.Net.HTTPRequest
-            //    System.IO.StringReader ms = new System.IO.StringReader(xml);
-            //    System.Xml.XmlReader reader = new System.Xml.XmlTextReader(ms);
-
-            //    System.Xml.Serialization.XmlSerializer ser =
-            //    new System.Xml.Serialization.XmlSerializer(typeof(UpdateInfo));
-            //    retVal = (UpdateInfo)ser.Deserialize(reader);
-            //    reader.Close();
-            //    ms.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("error while receiving udate informations" + ex.Message, ex);
-            //}
-            return retVal;
+            Titel = "";
+            Message = "";
+            URL = "";
+            Version = new Version();
+            HTMLHistory = "";
         }
 
+        /// <summary>
+        /// The UpdateTitle
+        /// </summary>
+        public string Titel;
 
-        #region InfoMembers
+        /// <summary>
+        /// the Update Messageblock
+        /// </summary>
+        public string Message;
 
-        public UpdateInfo()
-        {
-            _updateURL="";
-            _timestamp="";
-            _currentVersion="";
-            _liste = new List<UpdateChangeInfo>();
-        }
+        /// <summary>
+        /// A URL for more Information
+        /// </summary>
+        public string URL;
 
-        string _currentVersion;
-        [System.Xml.Serialization.XmlAttributeAttribute("current")]
-        public string CurrentVersion
-        {
-            get
-            {
-                return _currentVersion;
-            }
-            set
-            {
-                _currentVersion = value;
-            }
-        }
+        /// <summary>
+        /// the new VersionID (not the ApplicationVersion)
+        /// </summary>
+        public System.Version Version;
 
-        string _timestamp;
-        [System.Xml.Serialization.XmlAttributeAttribute("timestamp")]
-        public string LastUpdateTimestamp
-        {
-            get
-            {
-                return _timestamp;
-            }
-            set
-            {
-                _timestamp = value;
-            }
-        }
-
-        string _updateURL;
-        [System.Xml.Serialization.XmlAttributeAttribute("updateURL")]
-        public string updateURL
-        {
-            get
-            {
-                return _updateURL;
-            }
-            set
-            {
-                _updateURL = value;
-            }
-        }
-
-        List<UpdateChangeInfo> _liste;
-        [System.Xml.Serialization.XmlArrayAttribute(ElementName = "changes", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("changeinfo", Form = System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable = false)]
-        public UpdateChangeInfo[] ChangeInfosArr
-        {
-            get
-            {
-                return _liste.ToArray();
-            }
-            set
-            {
-                _liste = new List<UpdateChangeInfo>(value);
-            }
-        }
-
-        //Für den einfacheren Memberzugriff mit .Add etc
-        [System.Xml.Serialization.XmlIgnore()]
-        public List<UpdateChangeInfo> ChangeInfos
-        {
-            get
-            {
-                return _liste;
-            }
-        }
-        #endregion InfoMembers
-
-    }//end UpdateInfo
-        
-    #region UpdateChanges
-
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, IncludeInSchema = false)]
-    [System.Xml.Serialization.XmlRootAttribute(ElementName = "changeinfo", IsNullable = false)]
-    public class UpdateChangeInfo
-    {
-
-        public UpdateChangeInfo()
-        {
-            _version = "";
-            _timestamp = "";
-            _message = "";
-        }
-
-        string _version;
-        [System.Xml.Serialization.XmlAttributeAttribute("version")]
-        public string Version
-        {
-            get
-            {
-                return _version;
-            }
-            set
-            {
-                _version = value;
-            }
-        }
-
-        string _timestamp;
-        [System.Xml.Serialization.XmlAttributeAttribute("timestamp")]
-        public string LastUpdateTimestamp
-        {
-            get
-            {
-                return _timestamp;
-            }
-            set
-            {
-                _timestamp = value;
-            }
-        }
-
-        string _message;
-        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string message
-        {
-            get
-            {
-                return _message;
-            }
-            set
-            {
-                _message = value;
-            }
-        }
+        /// <summary>
+        /// a HTML Text with History Informations
+        /// </summary>
+        public string HTMLHistory;
     }
-    #endregion 
-
 }
