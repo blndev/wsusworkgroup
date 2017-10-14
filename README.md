@@ -2,9 +2,9 @@
 
 This program helps to use the Windows Server Update Service (WSUS) on a Computer, without the need of manipulating the registry or the use of gpos.
 
-![General](assets/Home_WSUS 1.png)
+![General](https://github.com/blndev/wsusworkgroup/raw/master/Home_WSUS%201.png)
 
-![Details](assets/Home_WSUS 2.png)
+![Details](https://github.com/blndev/wsusworkgroup/raw/master/Home_WSUS%202.png)
 
 ## Features:
 * easy to use
